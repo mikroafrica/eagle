@@ -6,7 +6,9 @@ import moment from "moment";
 import { TransactionServiceClient } from "../../../../db";
 import logger from "../../../../../logger";
 
-import reQueryWalletTopUpEvent from "./requery.wallet-top-up.event";
+import reQueryWalletTopUpEvent, {
+  REQUERY_WALLET_TOP_UP_EMITTER,
+} from "./requery.wallet-top-up.event";
 
 import {
   billerPurchaseTransactionStatus,
