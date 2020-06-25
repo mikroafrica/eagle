@@ -21,11 +21,11 @@ pipelines:
             - git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git dev:master
             -
 
-    master:
-      - step:
-          script:
-            - bash preinstall.sh
-            - npm install
-            - npm test
-            - bash postinstall.sh
-            - git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$PROD_HEROKU_APP_NAME.git
+#    master:
+#      - step:
+#          script:
+#            - bash preinstall.sh
+#            - npm install
+#            - npm test
+#            - bash postinstall.sh
+#            - git push https://heroku:$HEROKU_API_KEY@git.heroku.com/$PROD_HEROKU_APP_NAME.git
