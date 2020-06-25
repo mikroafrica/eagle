@@ -45,10 +45,12 @@
     "supertest": "^4.0.2"
   },
   "dependencies": {
+    "cron": "^1.8.2",
     "dotenv": "^8.2.0",
     "joi": "^14.3.1",
     "mikro-kafka-client": "git+ssh://git@bitbucket.org/mikrodevs/mikro-kafka-js.git#master",
     "mongoose": "^5.9.17",
+    "pg": "^8.2.1",
     "restify": "^8.5.1",
     "restify-clients": "^2.5.2",
     "tsscmp": "^1.0.6",
