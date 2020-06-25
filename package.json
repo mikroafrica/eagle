@@ -1,0 +1,59 @@
+{
+  "name": "mk-eagle",
+  "version": "1.0.0",
+  "description": "Eagle does heavy lifting for services, runs jobs, publish events at intervals etc.",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "flow check && mocha -r @babel/register tests/* test/**/*",
+    "build": "npm run build:lib && npm run build:flow",
+    "build:lib": "babel src/ -d lib/",
+    "postinstall": "npm run build",
+    "build:flow": "flow-copy-source -v src/ lib/",
+    "start": "node lib/index.js"
+  },
+  "keywords": [
+    "node",
+    "js"
+  ],
+  "engines": {
+    "node": "11.10.1"
+  },
+  "author": "Meshileya Seun (info@meshileyaseun.dev)",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/cli": "^7.10.3",
+    "@babel/core": "^7.10.3",
+    "@babel/node": "^7.10.3",
+    "@babel/plugin-transform-async-to-generator": "^7.10.1",
+    "@babel/polyfill": "^7.10.1",
+    "@babel/preset-env": "^7.10.3",
+    "@babel/preset-flow": "^7.10.1",
+    "@babel/register": "^7.10.3",
+    "chai": "^4.2.0",
+    "chai-as-promised": "^7.1.1",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-plugin-import": "^2.21.2",
+    "flow-bin": "^0.109.0",
+    "flow-copy-source": "^2.0.9",
+    "mocha": "^6.2.3",
+    "sinon": "^7.5.0",
+    "winston": "^3.3.3"
+  },
+  "dependencies": {
+    "async": "^3.2.0",
+    "cors": "^2.8.5",
+    "cron": "^1.8.2",
+    "dotenv": "^8.2.0",
+    "events": "^3.0.0",
+    "joi": "^14.3.1",
+    "mikro-kafka-client": "git+ssh://git@bitbucket.org/mikrodevs/mikro-kafka-js.git#master",
+    "mongoose": "^5.7.1",
+    "multer": "^1.4.2",
+    "pg": "^8.2.1",
+    "restify": "^8.5.1",
+    "restify-clients": "^2.5.2",
+    "restify-cors-middleware": "^1.1.1",
+    "tsscmp": "^1.0.6"
+  }
+}
