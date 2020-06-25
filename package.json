@@ -4,12 +4,15 @@
   "description": "Eagle does heavy lifting for services, runs jobs, publish events at intervals etc.",
   "main": "lib/index.js",
   "scripts": {
-    "test": "flow check && mocha -r @babel/register tests/* test/**/*",
+    "test": "flow check && mocha -r @babel/register tests tests/unit/*",
+    "integration-test": "flow check && mocha -r @babel/register --timeout 30000 tests/integration/*",
     "build": "npm run build:lib && npm run build:flow",
     "build:lib": "babel src/ -d lib/",
-    "postinstall": "npm run build",
     "build:flow": "flow-copy-source -v src/ lib/",
-    "start": "node lib/index.js"
+    "postinstall": "npm run build",
+    "start": "node lib/index.js",
+    "heroku-prebuild": "bash preinstall.sh",
+    "heroku-postbuild": "bash postinstall.sh"
   },
   "keywords": [
     "node",
