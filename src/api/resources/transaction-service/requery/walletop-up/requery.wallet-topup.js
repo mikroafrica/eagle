@@ -11,20 +11,18 @@ import reQueryWalletTopUpEvent from "./requery.wallet-top-up.event";
 import {
   billerPurchaseTransactionStatus,
   morning,
-  night,
+  night, paymentFailedTransactionStatus,
   paymentSuccessfulTransactionStatus,
   pendingTransactionStatus,
   TransactionMessagingType,
   TransactionStatus,
   walletTopUpTransactionType,
-} from "../../../commons/model";
+} from '../../../commons/model';
 import type {
   TransactionMessaging,
   TransactionMessagingContainer,
 } from "../../../commons/model";
-import ReQueryWalletTopUpEmitter, {
-  REQUERY_WALLET_TOP_UP_EMITTER,
-} from "./requery.wallet-top-up.event";
+import { REQUERY_WALLET_TOP_UP_EMITTER } from "./requery.wallet-top-up.event";
 
 function reQueryPendingWalletTopUp(callback) {
   const query = {
@@ -32,14 +30,15 @@ function reQueryPendingWalletTopUp(callback) {
       "SELECT * FROM transactions tnx " +
       "JOIN transaction_statuses status ON status.id = tnx.transaction_status " +
       "JOIN transaction_types type ON type.id = tnx.transaction_type " +
-      "WHERE status.name = $1 OR status.name = $2 OR status.name = $3 " +
-      "AND type.name = $4 " +
-      "AND tnx.time_created >= $5 AND tnx.time_created <= $6 ",
+      "WHERE status.name = $1 OR status.name = $2 OR status.name = $3 OR status.name = $4 " +
+      "AND type.name = $5 " +
+      "AND tnx.time_created >= $6 AND tnx.time_created <= $7 ",
 
     values: [
       pendingTransactionStatus,
       paymentSuccessfulTransactionStatus,
       billerPurchaseTransactionStatus,
+      paymentFailedTransactionStatus,
       walletTopUpTransactionType,
       morning(),
       night(),

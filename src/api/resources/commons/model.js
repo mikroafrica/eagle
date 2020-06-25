@@ -3,6 +3,7 @@ export const walletTopUpTransactionType = "wallet_top_up";
 export const pendingTransactionStatus = "pending";
 export const paymentSuccessfulTransactionStatus = "payment successful";
 export const billerPurchaseTransactionStatus = "bill purchased failed";
+export const paymentFailedTransactionStatus = "payment failed";
 
 export const morning = () => {
   const fromDate = new Date();
