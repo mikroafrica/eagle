@@ -1,6 +1,7 @@
 import logger from "./logger";
 import server from "./server";
 import { RetryTransferJob } from "./api/resources/transaction-service/requery/transfer";
+import { RetryWalletTopUpJob } from "./api/resources/transaction-service/requery/walletop-up";
 
 // handle all uncaught errors
 // process.on("uncaughtException", function (err) {
@@ -8,6 +9,7 @@ import { RetryTransferJob } from "./api/resources/transaction-service/requery/tr
 // });
 
 RetryTransferJob().start();
+RetryWalletTopUpJob().start();
 
 const port = process.env.PORT || 3000;
 server.listen(port, function () {

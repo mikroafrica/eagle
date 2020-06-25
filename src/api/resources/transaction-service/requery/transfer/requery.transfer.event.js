@@ -6,8 +6,8 @@ import {
 } from "../../model/transaction.service";
 import logger from "../../../../../logger";
 import Events from "events";
-import type { PaymentDto } from "./retry.transfer";
 import { PaymentType } from "./retry.transfer";
+import type { PaymentDto } from "../../../commons/model";
 
 const Emitter = Events.EventEmitter;
 const ReQueryEmitter = new Emitter();
@@ -66,7 +66,7 @@ ReQueryEmitter.on(REQUERY_TRANSACTION_EMITTER, function (
       }
     },
     () => {
-      if(paymentDtoList.length > 0) {
+      if (paymentDtoList.length > 0) {
         logger.info(`published all transfers for reQuery`);
       }
     }

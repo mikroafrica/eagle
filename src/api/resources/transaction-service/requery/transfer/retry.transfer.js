@@ -8,36 +8,22 @@ import { TransactionServiceClient } from "../../../../db";
 
 import reQueryTransferEvent from "./requery.transfer.event";
 import { REQUERY_TRANSACTION_EMITTER } from "./requery.transfer.event";
-
-const transactionType = "transfer";
-const pendingTransactionStatus = "pending";
-const paymentSuccessfulTransactionStatus = "payment successful";
-const billerPurchaseTransactionStatus = "bill purchased failed";
+import {
+  billerPurchaseTransactionStatus,
+  morning,
+  night,
+  paymentSuccessfulTransactionStatus,
+  pendingTransactionStatus,
+  transferTransactionType,
+} from "../../../commons/model";
+import type { PaymentDto } from "../../../commons/model";
 
 export const PaymentType = {
   BANK_TRANSFER_REQUERY: "BANK_TRANSFER_REQUERY",
   BANK_TRANSFER_REPROCESS: "BANK_TRANSFER_REPROCESS",
 };
 
-export type PaymentDto = {
-  userId: string,
-  amount: number,
-  remarks: string,
-  paymentDate: string,
-  transactionRef: string,
-  accountNumber: string,
-  bankCode: string,
-  customerName: string,
-  paymentType: string,
-};
-
 function reQueryPendingTransfer(callback) {
-  const fromDate = new Date();
-  fromDate.setHours(0, 0, 0, 0);
-
-  const toDate = new Date();
-  toDate.setHours(23, 59, 0, 0);
-
   const query = {
     text:
       "SELECT * FROM transactions tnx " +
@@ -51,9 +37,9 @@ function reQueryPendingTransfer(callback) {
       pendingTransactionStatus,
       paymentSuccessfulTransactionStatus,
       billerPurchaseTransactionStatus,
-      transactionType,
-      fromDate.getTime(),
-      toDate.getTime(),
+      transferTransactionType,
+      morning(),
+      night(),
     ],
   };
 
@@ -68,7 +54,7 @@ function reQueryPendingTransfer(callback) {
       );
       const paymentListDto: PaymentDto[] = results.map(function (data) {
         const serviceFee = data.meta.data.serviceFee;
-        const amount = parseInt(data.amount) - parseInt(serviceFee);
+        const amount = parseFloat(data.amount) - parseFloat(serviceFee);
         return {
           userId: data.user_id,
           amount: amount,
