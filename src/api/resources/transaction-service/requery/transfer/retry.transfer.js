@@ -1,6 +1,8 @@
 import cron from "cron";
 const CronJob = cron.CronJob;
 
+import moment from "moment";
+
 import logger from "../../../../../logger";
 import { TransactionServiceClient } from "../../../../db";
 
@@ -90,7 +92,8 @@ function reQueryPendingTransfer(callback) {
 
 export const RetryTransferJob = (): CronJob => {
   return new CronJob("0 */1 * * * *", function () {
-    logger.info(`reQuery for transfer started at [${new Date()}]`);
+    const formattedDate = moment.tz("Africa/Lagos");
+    logger.info(`::: reQuery for transfer started ${formattedDate} :::`);
 
     reQueryPendingTransfer(function (paymentDtoList: PaymentDto[]) {
       reQueryTransferEvent.emit(REQUERY_TRANSACTION_EMITTER, paymentDtoList);

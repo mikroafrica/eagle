@@ -49,6 +49,7 @@
     "dotenv": "^8.2.0",
     "joi": "^14.3.1",
     "mikro-kafka-client": "git+ssh://git@bitbucket.org/mikrodevs/mikro-kafka-js.git#master",
+    "moment": "^2.27.0",
     "mongoose": "^5.9.17",
     "pg": "^8.2.1",
     "restify": "^8.5.1",

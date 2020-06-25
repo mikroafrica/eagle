@@ -66,7 +66,9 @@ ReQueryEmitter.on(REQUERY_TRANSACTION_EMITTER, function (
       }
     },
     () => {
-      logger.info(`published all transfers for reQuery`);
+      if(paymentDtoList.length > 0) {
+        logger.info(`published all transfers for reQuery`);
+      }
     }
   );
 });
