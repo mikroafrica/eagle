@@ -5,9 +5,9 @@ import { RetryWalletTopUpJob } from "./api/resources/transaction-service/requery
 import { RetryPaymentJob } from "./api/resources/payment-service/requery.payment";
 
 // handle all uncaught errors
-// process.on("uncaughtException", function (err) {
-//   logger.error(`uncaught error has been fired with Error: ${err}`);
-// });
+process.on("uncaughtException", function (err) {
+  logger.error(`uncaught error has been fired with Error: ${err}`);
+});
 
 RetryTransferJob().start();
 RetryWalletTopUpJob().start();

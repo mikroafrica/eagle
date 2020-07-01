@@ -57,7 +57,7 @@ function reQueryPendingTransfer(callback) {
 }
 
 export const RetryPaymentJob = (): CronJob => {
-  return new CronJob("0 */10 * * * *", function () {
+  return new CronJob("0 */5 * * * *", function () {
     const formattedDate = moment.tz("Africa/Lagos");
     logger.info(`::: re-processing for payment started ${formattedDate} :::`);
 
