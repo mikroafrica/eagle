@@ -66,7 +66,7 @@ function publishWalletTopUpDto(
       hostname: process.env.KAFKA_HOST,
       username: process.env.KAFKA_USERNAME,
       password: process.env.KAFKA_PASSWORD,
-      topic: process.env.KAFKA_PAYMENT_PAYLOAD_TOPIC,
+      topic: process.env.KAFKA_VENDOR_PAYMENT_TOPIC,
     };
 
     mikroProducer(

@@ -21,6 +21,21 @@ export const TransactionServiceClient = () => {
   return client;
 };
 
+export const PaymentServiceClient = () => {
+  const client = new Client({
+    user: process.env.PAYMENT_POSTGRES_USERNAME,
+    host: process.env.PAYMENT_POSTGRES_ENDPOINT,
+    database: process.env.PAYMENT_POSTGRESS_DATABASE_NAME,
+    password: process.env.PAYMENT_POSTGRES_PASSWORD,
+    port: process.env.PAYMENT_POSTGRES_PORT,
+  });
+  logger.info("connecting to payment service database");
+
+  client.connect();
+
+  return client;
+};
+
 export const connect = () =>
   mongoose
     .connect(process.env.MONGODB_URI, {
