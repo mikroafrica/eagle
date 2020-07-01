@@ -67,7 +67,7 @@ function reQueryPendingWalletTopUp(callback) {
             email: data.userdata.meta.accountEmail,
             vendor: data.meta.data.vendor,
             type: TransactionMessagingType.WALLET_TOP_UP,
-            callbackResponse: data.gateway_response,
+            // callbackResponse: data.gateway_response, this is not necessary to return back to the user
             walletId: data.destination_wallet_id,
           };
           const transactionReference = data.transaction_reference;
@@ -89,7 +89,7 @@ function reQueryPendingWalletTopUp(callback) {
 }
 
 export const RetryWalletTopUpJob = (): CronJob => {
-  return new CronJob("0 */1 * * * *", function () {
+  return new CronJob("0 */2 * * * *", function () {
     const formattedDate = moment.tz("Africa/Lagos");
     logger.info(`::: reQuery for wallet top-up started ${formattedDate} :::`);
 
