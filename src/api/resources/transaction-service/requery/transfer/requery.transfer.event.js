@@ -41,17 +41,15 @@ ReQueryEmitter.on(REQUERY_TRANSACTION_EMITTER, function (
         transaction is expected to reQuery from 0 to 11 before being reprocessed all over again
        */
       let updatedRetryCount = transactionObject.retryCount;
-      // if (transactionObject.retryCount > 10) {
-      //   updatedRetryCount = 0;
-      //
-      //   paymentDto = Object.assign(paymentDto, {
-      //     paymentType: PaymentType.BANK_TRANSFER_REPROCESS,
-      //   });
-      // } else {
-      //
-      // }
+      if (transactionObject.retryCount > 10 && transactionObject.retryCount !== -1) {
+        updatedRetryCount = -1;
 
-      updatedRetryCount = updatedRetryCount + 1;
+        paymentDto = Object.assign(paymentDto, {
+          paymentType: PaymentType.BANK_TRANSFER_REPROCESS,
+        });
+      } else {
+        updatedRetryCount = updatedRetryCount + 1;
+      }
 
       // update the transaction with its number of retry count
       await updateByTransactionReference(
