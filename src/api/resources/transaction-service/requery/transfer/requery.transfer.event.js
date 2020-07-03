@@ -42,7 +42,7 @@ ReQueryEmitter.on(REQUERY_TRANSACTION_EMITTER, function (
        */
       let updatedRetryCount = transactionObject.retryCount;
       if (
-        transactionObject.retryCount > 10 &&
+        transactionObject.retryCount > 4 &&
         transactionObject.retryCount !== -1
       ) {
         logger.info(
@@ -56,6 +56,7 @@ ReQueryEmitter.on(REQUERY_TRANSACTION_EMITTER, function (
       }
 
       if (updatedRetryCount !== -1) {
+        logger.info(`::: transaction  :::`)
         updatedRetryCount = updatedRetryCount + 1;
       }
 
