@@ -53,7 +53,9 @@ ReQueryEmitter.on(REQUERY_TRANSACTION_EMITTER, function (
         paymentDto = Object.assign(paymentDto, {
           paymentType: PaymentType.BANK_TRANSFER_REPROCESS,
         });
-      } else {
+      }
+
+      if (updatedRetryCount !== -1) {
         updatedRetryCount = updatedRetryCount + 1;
       }
 
