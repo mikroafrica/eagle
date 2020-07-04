@@ -41,7 +41,7 @@ ReQueryEmitter.on(REQUERY_TRANSACTION_EMITTER, function (
         transaction is expected to reQuery from 0 to 11 before being reprocessed all over again
        */
       let updatedRetryCount = transactionObject.retryCount;
-      let updatedReProcessCount = transactionObject.reProcessCount;
+      let updatedReProcessCount = transactionObject.reProcessCount || 0;
 
       if (transactionObject.retryCount > 4) {
         logger.info(
