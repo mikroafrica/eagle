@@ -41,29 +41,27 @@ ReQueryEmitter.on(REQUERY_TRANSACTION_EMITTER, function (
         transaction is expected to reQuery from 0 to 11 before being reprocessed all over again
        */
       let updatedRetryCount = transactionObject.retryCount;
-      if (
-        transactionObject.retryCount > 10 &&
-        transactionObject.retryCount !== -1
-      ) {
+      let updatedReProcessCount = transactionObject.reProcessCount;
+
+      if (transactionObject.retryCount > 4) {
         logger.info(
           `::: transaction reference logged for re-processing [${transactionReference}] :::`
         );
-        updatedRetryCount = -1;
+        updatedRetryCount = 0;
+        updatedReProcessCount = updatedReProcessCount + 1;
 
         paymentDto = Object.assign(paymentDto, {
           paymentType: PaymentType.BANK_TRANSFER_REPROCESS,
         });
-      }
-
-      if (updatedRetryCount !== -1) {
-        logger.info(`::: transaction  :::`)
+      } else {
         updatedRetryCount = updatedRetryCount + 1;
       }
 
       // update the transaction with its number of retry count
       await updateByTransactionReference(
         transactionReference,
-        updatedRetryCount
+        updatedRetryCount,
+        updatedReProcessCount
       );
 
       // push payment dto to kafka for further processing
