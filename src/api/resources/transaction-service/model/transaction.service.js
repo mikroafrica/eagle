@@ -10,11 +10,12 @@ export const saveTransaction = (transactionReference: string) => {
 
 export const updateByTransactionReference = (
   transactionReference: string,
-  retryCount: number
+  retryCount: number,
+  reProcessCount: number
 ) => {
   return Transaction.findOneAndUpdate(
     { transactionReference },
-    { $set: { retryCount } },
+    { $set: { retryCount, reProcessCount } },
     { new: true }
   ).exec();
 };

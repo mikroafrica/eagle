@@ -8,6 +8,10 @@ const schema = {
   retryCount: {
     type: Number,
   },
+
+  reProcessCount: {
+    type: Number
+  },
 };
 
 const transactionSchema = new mongoose.Schema(schema, { timestamps: true });
