@@ -77,7 +77,7 @@ function queryPastHourTransactionByName(callback) {
           "`\n" +
           "Failed Count: `" +
           data.failed +
-          "`\n";
+          "`\n\n";
       }
 
       if (modifiedValue.length !== 0) {
@@ -94,7 +94,7 @@ function queryPastHourTransactionByName(callback) {
 }
 
 export const QueryPastHourTransactionJob = (): CronJob => {
-  return new CronJob("0 */59 * * * *", function () {
+  return new CronJob("0 0 */1 * * *", function () {
     const formattedDate = moment.tz("Africa/Lagos");
     logger.info(`::: Query past hour transaction started ${formattedDate} :::`);
 
