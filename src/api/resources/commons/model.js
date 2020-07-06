@@ -1,3 +1,5 @@
+import moment from "moment";
+
 export const transferTransactionType = "transfer";
 export const walletTopUpTransactionType = "wallet_top_up";
 export const withdrawalTransactionType = "withdrawal";
@@ -15,6 +17,18 @@ export const night = () => {
   const toDate = new Date();
   toDate.setHours(23, 59, 0, 0);
   return toDate.getTime();
+};
+
+export const pastHour = () => {
+  const formattedDate = moment.tz("Africa/Lagos");
+  const date = new Date(formattedDate.valueOf());
+  date.setHours(date.getHours() - 1);
+  return date.getTime();
+};
+
+export const now = () => {
+  const formattedDate = moment.tz("Africa/Lagos");
+  return new Date(formattedDate.valueOf()).getTime();
 };
 
 export type PaymentDto = {
@@ -60,4 +74,10 @@ export const TransactionStatus = {
   REVERSAL: "REVERSAL",
   FAILED_REVERSAL: "FAILED_REVERSAL",
   UNKNOWN: "UNKOWN",
+};
+
+export type SlackModel = {
+  title: string,
+  channel: string,
+  message: string
 };
