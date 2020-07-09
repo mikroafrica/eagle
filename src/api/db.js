@@ -46,3 +46,4 @@ export const connect = () =>
     })
     .then(() => logger.info("Database connected successfully"))
     .catch((e) => logger.error(`Failed to connect with error ${e}`));
+
