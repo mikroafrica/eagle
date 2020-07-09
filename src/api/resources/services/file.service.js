@@ -14,6 +14,6 @@ const request = () => {
   return client;
 };
 
-export const retentionReport = ({ params }) => {
+export const fileReport = ({ params }) => {
   return post({ client: request, path: "/file", params });
 };

@@ -11,7 +11,7 @@ import {
   previousDayInMorning,
 } from "../../commons/model";
 import { TransactionServiceClient } from "../../../db";
-import { retentionReport } from "../../services/file.service";
+import { fileReport } from "../../services/file.service";
 import type { SlackModel } from "../../commons/model";
 
 const mikroKafkaClient = require("mikro-kafka-client");
@@ -83,7 +83,7 @@ function computeRetentionReport(reportCallback) {
                   const results = response.rows;
                   if (results.length !== 0) {
                     const userTnx = results[0];
-                    reportArr.push(Object.assign(user, userTnx));
+                    reportArr.push(Object.assign(userTnx, user));
                   }
                   callback();
                 })
@@ -113,7 +113,6 @@ function computeRetentionReport(reportCallback) {
 // run job at every 3:50 A.M
 export const PreviousDayRetentionReportJob = (): CronJob => {
   return new CronJob("0 50 3 * * *", function () {
-  // return new CronJob("* 30 03 * * *", function () {
     const formattedDate = moment.tz("Africa/Lagos");
     logger.info(`::: Retention report @ ${formattedDate} :::`);
 
@@ -126,7 +125,7 @@ export const PreviousDayRetentionReportJob = (): CronJob => {
 function pushReportToSlack(report, filename, time) {
   const params = { report, filename, type: "csv" };
 
-  retentionReport({ params })
+  fileReport({ params })
     .then((responseData) => {
       const retentionData = responseData.data;
       const retentionLink = retentionData.data.url;
