@@ -76,6 +76,7 @@ function reQueryPendingTransfer(callback) {
     });
 }
 
+// run job every three minutes
 export const RetryTransferJob = (): CronJob => {
   return new CronJob("0 */3 * * * *", function () {
     const formattedDate = moment.tz("Africa/Lagos");

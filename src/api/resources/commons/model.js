@@ -21,7 +21,7 @@ export const night = () => {
 
 export const pastHour = () => {
   const formattedDate = moment.tz("Africa/Lagos");
-  return formattedDate.subtract(1, 'hours').valueOf();
+  return formattedDate.subtract(1, "hours").valueOf();
 };
 
 export const now = () => {
@@ -30,9 +30,27 @@ export const now = () => {
 };
 
 export const convertTimeStampToTime = (timestamp: number) => {
-  const formattedDate = moment(timestamp, 'x').tz("Africa/Lagos");
-  return formattedDate.format('HH:mm')
-}
+  const formattedDate = moment(timestamp, "x").tz("Africa/Lagos");
+  return formattedDate.format("HH:mm");
+};
+
+export const convertTimeStampToDate = (timestamp: number) => {
+  const formattedDate = moment(timestamp, "x").tz("Africa/Lagos");
+  return formattedDate.format("DD-MMMM-YYYY");
+};
+
+const previousDay = (time: string) => {
+  const formattedDate = moment(time, ["h:mm A"]).tz("Africa/Lagos");
+  return formattedDate.subtract(1, "days").valueOf();
+};
+
+export const previousDayInMorning = () => {
+  return previousDay("12:00 AM");
+};
+
+export const previousDayAtNight = () => {
+  return previousDay("11:59 PM");
+};
 
 export type PaymentDto = {
   userId: string,
