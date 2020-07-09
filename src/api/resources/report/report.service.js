@@ -1,7 +1,7 @@
 import cron from "cron";
 const CronJob = cron.CronJob;
 
-import { now, pastHour } from "../commons/model";
+import { convertTimeStampToTime, now, pastHour } from "../commons/model";
 import { TransactionServiceClient } from "../../db";
 import logger from "../../../logger";
 import moment from "moment";
@@ -11,6 +11,9 @@ import transactionSummaryEvent, {
 } from "./report.event";
 
 function queryPastHourTransactionByName(callback) {
+  const oneHourAgo = pastHour();
+  const currentTime = now();
+
   const query = {
     text:
       "SELECT  COUNT(tnx.id), tnxType.name, SUM(tnx.amount) AS amount," +
@@ -28,8 +31,12 @@ function queryPastHourTransactionByName(callback) {
       "JOIN public.transaction_statuses status ON  status.id = tnx.transaction_status " +
       "WHERE tnx.time_created >= $1 AND tnx.time_created <= $2 GROUP BY tnxType.name",
 
-    values: [pastHour(), now()],
+    values: [oneHourAgo, currentTime],
   };
+
+  const friendlyTime = `${convertTimeStampToTime(
+    oneHourAgo
+  )} -- ${convertTimeStampToTime(currentTime)}`;
 
   const client = TransactionServiceClient();
 
@@ -81,7 +88,7 @@ function queryPastHourTransactionByName(callback) {
       }
 
       if (modifiedValue.length !== 0) {
-        callback(modifiedValue);
+        callback(modifiedValue, friendlyTime);
       }
 
       client.end();
@@ -98,8 +105,8 @@ export const QueryPastHourTransactionJob = (): CronJob => {
     const formattedDate = moment.tz("Africa/Lagos");
     logger.info(`::: Query past hour transaction started ${formattedDate} :::`);
 
-    queryPastHourTransactionByName(function (data) {
-      transactionSummaryEvent.emit(TRANSACTION_SUMMARY_EMITTER, data);
+    queryPastHourTransactionByName(function (data, time) {
+      transactionSummaryEvent.emit(TRANSACTION_SUMMARY_EMITTER, data, time);
     });
   });
 };

@@ -13,14 +13,15 @@ const KafkaConfig = mikroKafkaClient.kafkaConfig;
 export const TRANSACTION_SUMMARY_EMITTER = "TRANSACTION_EMITTER";
 
 TransactionSummaryEmitter.on(TRANSACTION_SUMMARY_EMITTER, async function (
-  payload: string
+  payload: string,
+  time: string
 ) {
   try {
-    await publishTransactionSummary(payload);
+    await publishTransactionSummary(payload, time);
   } catch (e) {}
 });
 
-function publishTransactionSummary(payLoad: string) {
+function publishTransactionSummary(payLoad: string, time: string) {
   return new Promise((resolve, reject) => {
     const config: KafkaConfig = {
       hostname: process.env.KAFKA_HOST,
@@ -28,12 +29,6 @@ function publishTransactionSummary(payLoad: string) {
       password: process.env.KAFKA_PASSWORD,
       topic: process.env.KAFKA_SLACK_NOTIFICATION_TOPIC,
     };
-
-    const time = `${new Date(pastHour()).getHours() % 12}:${new Date(
-      pastHour()
-    ).getMinutes()} - ${new Date(now()).getHours() % 12}:${new Date(
-      now()
-    ).getMinutes()} `;
 
     const model: SlackModel = {
       title: `Transaction Summary btw ${time}`,

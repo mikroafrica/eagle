@@ -21,15 +21,18 @@ export const night = () => {
 
 export const pastHour = () => {
   const formattedDate = moment.tz("Africa/Lagos");
-  const date = new Date(formattedDate.valueOf());
-  date.setHours(date.getHours() - 1);
-  return date.getTime();
+  return formattedDate.subtract(1, 'hours').valueOf();
 };
 
 export const now = () => {
   const formattedDate = moment.tz("Africa/Lagos");
-  return new Date(formattedDate.valueOf()).getTime();
+  return formattedDate.valueOf();
 };
+
+export const convertTimeStampToTime = (timestamp: number) => {
+  const formattedDate = moment(timestamp, 'x').tz("Africa/Lagos");
+  return formattedDate.format('HH:mm')
+}
 
 export type PaymentDto = {
   userId: string,
@@ -79,5 +82,5 @@ export const TransactionStatus = {
 export type SlackModel = {
   title: string,
   channel: string,
-  message: string
+  message: string,
 };
