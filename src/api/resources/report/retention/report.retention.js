@@ -111,7 +111,7 @@ function computeRetentionReport(reportCallback) {
 }
 
 export const PreviousDayRetentionReportJob = (): CronJob => {
-  return new CronJob("* 22 23 * * *", function () {
+  return new CronJob("* 30 23 * * *", function () {
   // return new CronJob("* 30 03 * * *", function () {
     const formattedDate = moment.tz("Africa/Lagos");
     logger.info(`::: Retention report @ ${formattedDate} :::`);
