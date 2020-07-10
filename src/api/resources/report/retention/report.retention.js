@@ -75,7 +75,7 @@ function computeRetentionReport(reportCallback) {
                   "JOIN public.transaction_statuses status ON  status.id = tnx.transaction_status " +
                   "WHERE tnx.time_created >= $1 AND tnx.time_created <= $2 AND tnx.user_id = $3",
 
-                values: [pastDayInMorning, pastDayAtNight, userId],
+                values: [pastDayInMorning, pastDayAtNight, `${userId}`],
               };
               client
                 .query(query)
@@ -112,7 +112,7 @@ function computeRetentionReport(reportCallback) {
 
 // run job at every 3:50 A.M
 export const PreviousDayRetentionReportJob = (): CronJob => {
-  return new CronJob("0 50 3 * * *", function () {
+  return new CronJob("0 40 17 * * *", function () {
     const formattedDate = moment.tz("Africa/Lagos");
     logger.info(`::: Retention report @ ${formattedDate} :::`);
 
