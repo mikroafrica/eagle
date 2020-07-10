@@ -110,9 +110,9 @@ function computeRetentionReport(reportCallback) {
   );
 }
 
-// run job at every 3:50 A.M
+// run job at every 2:30 A.M
 export const PreviousDayRetentionReportJob = (): CronJob => {
-  return new CronJob("0 40 17 * * *", function () {
+  return new CronJob("0 30 2 * * *", function () {
     const formattedDate = moment.tz("Africa/Lagos");
     logger.info(`::: Retention report @ ${formattedDate} :::`);
 
