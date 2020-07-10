@@ -100,7 +100,7 @@ function computeRetentionReport(reportCallback) {
               );
               client.end();
 
-              const time = convertTimeStampToDate(pastDayAtNight);
+              const time = convertTimeStampToDate(pastDayInMorning);
               const fileName = `Retention Report - ${time}`;
               reportCallback(reportArr, fileName, time);
             }

@@ -43,7 +43,7 @@ function computeTerminalReport(callback) {
       const results = response.rows;
 
       if (results.length > 0) {
-        const time = convertTimeStampToDate(pastDayAtNight);
+        const time = convertTimeStampToDate(pastDayInMorning);
         const fileName = `Terminal Report - ${time}`;
 
         callback(results, fileName, time);
@@ -58,10 +58,10 @@ function computeTerminalReport(callback) {
     });
 }
 
-// run job at every 1:30 A.M
+// run job at every 1:45 A.M
 export const PreviousDayTerminalReportJob = (): CronJob => {
   return new CronJob(
-    "0 30 1 * * *",
+    "0 45 1 * * *",
     function () {
       const formattedDate = moment.tz("Africa/Lagos");
       logger.info(`::: Terminal report @ ${formattedDate} :::`);
