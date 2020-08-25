@@ -8,7 +8,7 @@ import {
   previousDayAtNight,
   previousDayInMorning,
 } from "../../commons/model";
-import { TransactionServiceClient } from "../../../db";
+import { PaymentServiceClient, TransactionServiceClient } from '../../../db';
 import { fileReport } from "../../services/file.service";
 import type { SlackModel } from "../../commons/model";
 
@@ -17,7 +17,7 @@ const mikroProducer = mikroKafkaClient.mikroProducer;
 const KafkaConfig = mikroKafkaClient.kafkaConfig;
 
 function computeTerminalReport(callback) {
-  const client = TransactionServiceClient();
+  const client = PaymentServiceClient();
 
   const pastDayInMorning = previousDayInMorning();
   const pastDayAtNight = previousDayAtNight();
@@ -25,15 +25,15 @@ function computeTerminalReport(callback) {
   // compute all terminal related transactions
   const query = {
     text:
-      "SELECT  COUNT(tnx.id), tnx.customer_biller_id, SUM(tnx.amount) AS amount, " +
-      "SUM(CASE WHEN status.name = 'successful' THEN tnx.amount else NULL END) AS successfulAmount, " +
-      "SUM(CASE WHEN status.name != 'successful' THEN tnx.amount else NULL END) AS failedAmount, " +
-      "COUNT(CASE WHEN status.name = 'successful' THEN 1 else NULL END) AS successful , " +
-      "COUNT(CASE WHEN status.name != 'successful' THEN 1 else NULL END) AS failed " +
-      "FROM public.transactions AS tnx JOIN public.transaction_types AS tnxType ON tnx.transaction_type = tnxType.id " +
-      "JOIN public.transaction_statuses status ON  status.id = tnx.transaction_status " +
-      "WHERE tnx.time_created >= $1 AND tnx.time_created <= $2 " +
-      "AND tnx.transaction_type = 2 GROUP BY tnx.customer_biller_id",
+      " SELECT  COUNT(tnx.id), profile.phone_number, profile.name, SUM(tnx.amount) AS amount," +
+      " tnx.callback_response -> 'callback_response' ->> 'terminalID' as terminalID," +
+      "SUM(CASE WHEN tnx.status = 'SUCCESS' THEN tnx.amount else NULL END) AS successfulAmount," +
+      "SUM(CASE WHEN tnx.status != 'SUCCESS' THEN tnx.amount else NULL END) AS failedAmount," +
+      "COUNT(CASE WHEN tnx.status = 'SUCCESS' THEN 1 else NULL END) AS successful ," +
+      "COUNT(CASE WHEN tnx.status != 'SUCCESS' THEN 1 else NULL END) AS failed " +
+      "FROM public.transactions AS tnx JOIN public.terminals profile ON  profile.terminal_id = tnx.callback_response -> 'callback_response' ->> 'terminalID' " +
+      "WHERE tnx.type = 'TERMINAL' AND tnx.time_created >= $1 AND tnx.time_created <= $2" +
+      " GROUP BY terminalID, profile.phone_number, profile.name",
 
     values: [pastDayInMorning, pastDayAtNight],
   };
