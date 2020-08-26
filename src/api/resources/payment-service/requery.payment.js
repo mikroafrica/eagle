@@ -22,16 +22,16 @@ function reQueryPendingTransfer(callback) {
   const query = {
     text:
       "SELECT * FROM transactions tnx " +
-      "WHERE handshake_status = $1 AND tnx.status = $2 AND (tnx.type = $3 or tnx.type = $4)" +
-      "AND tnx.time_created >= $5 AND tnx.time_created <= $6 ",
+      "WHERE handshake_status = $1 AND tnx.status = $2 AND (tnx.type = $3 or tnx.type = $4)" ,
+      // "AND tnx.time_created >= $5 AND tnx.time_created <= $6 ",
 
     values: [
       handShakeStatus,
       TransactionStatus.SUCCESS,
       TransactionMessagingType.WALLET_TOP_UP,
       TransactionMessagingType.TERMINAL,
-      pastHour(),
-      now(),
+      // pastHour(),
+      // now(),
     ],
   };
 
