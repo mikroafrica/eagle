@@ -151,6 +151,7 @@ function handleTerminal(data): TransactionMessaging {
     paymentStatus: data.status,
     userId: data.user_id,
     terminalId: data.terminal_id,
+    walletId: data.wallet_id,
     vendor: data.vendor,
     type: data.type,
     callbackResponse: callbackResponse,
