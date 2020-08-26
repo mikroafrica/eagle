@@ -74,6 +74,7 @@ export type TransactionMessaging = {
   type: string,
   callbackResponse: string,
   walletId: string,
+  userId: string,
   terminalId: string,
 };
 
