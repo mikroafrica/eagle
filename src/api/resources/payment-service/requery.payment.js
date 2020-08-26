@@ -5,10 +5,13 @@ import moment from "moment";
 import logger from "../../../logger";
 import {
   morning,
-  night, now, pastHour, previousDayAtNight,
+  night,
+  now,
+  pastHour,
+  previousDayAtNight,
   TransactionMessagingType,
   TransactionStatus,
-} from '../commons/model';
+} from "../commons/model";
 import { PaymentServiceClient } from "../../db";
 import type { TransactionMessaging } from "../commons/model";
 import { PAYMENT_EMITTER } from "./requery.payment.event";
@@ -28,7 +31,7 @@ function reQueryPendingTransfer(callback) {
       TransactionMessagingType.WALLET_TOP_UP,
       TransactionMessagingType.TERMINAL,
       pastHour(),
-      now()
+      now(),
     ],
   };
 
@@ -72,13 +75,18 @@ export const RetryPaymentJob = (): CronJob => {
 
 function handleWalletTopUp(data): TransactionMessaging {
   const callbackResponse = data.callback_response.callback_response;
-  const email = data.type === 'WALLET_TOP_UP' ? callbackResponse.customer.email : '';
+  const email =
+    data.type === "WALLET_TOP_UP" ? callbackResponse.customer.email : "";
+  const accountNumber =
+    data.type === "WALLET_TOP_UP"
+      ? callbackResponse.accountDetails.accountNumber
+      : "";
   return {
     paymentReference: data.payment_reference,
     amount: data.amount,
     paymentStatus: TransactionStatus.SUCCESS,
     email,
-    accountNumber: callbackResponse.accountDetails.accountNumber,
+    accountNumber,
     vendor: data.vendor,
     type: data.type,
     callbackResponse: callbackResponse,
