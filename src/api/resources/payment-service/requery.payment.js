@@ -6,6 +6,9 @@ import logger from "../../../logger";
 import {
   morning,
   night,
+  now,
+  pastHour,
+  previousDayAtNight,
   TransactionMessagingType,
   TransactionStatus,
 } from "../commons/model";
@@ -20,13 +23,15 @@ function reQueryPendingTransfer(callback) {
     text:
       "SELECT * FROM transactions tnx " +
       "WHERE handshake_status = $1 AND tnx.status = $2 AND (tnx.type = $3 or tnx.type = $4)" ,
-      // "AND tnx.time_created >= $4 AND tnx.time_created <= $5 ",
+      // "AND tnx.time_created >= $5 AND tnx.time_created <= $6 ",
 
     values: [
       handShakeStatus,
       TransactionStatus.SUCCESS,
       TransactionMessagingType.WALLET_TOP_UP,
       TransactionMessagingType.TERMINAL,
+      // pastHour(),
+      // now(),
     ],
   };
 
@@ -70,14 +75,20 @@ export const RetryPaymentJob = (): CronJob => {
 
 function handleWalletTopUp(data): TransactionMessaging {
   const callbackResponse = data.callback_response.callback_response;
+  const email =
+    data.type === "WALLET_TOP_UP" ? callbackResponse.customer.email : "";
+  const accountNumber =
+    data.type === "WALLET_TOP_UP"
+      ? callbackResponse.accountDetails.accountNumber
+      : "";
   return {
     paymentReference: data.payment_reference,
     amount: data.amount,
     paymentStatus: TransactionStatus.SUCCESS,
-    email: callbackResponse.customer.email,
-    accountNumber: callbackResponse.accountDetails.accountNumber,
+    email,
+    accountNumber,
     vendor: data.vendor,
-    type: TransactionMessagingType.WALLET_TOP_UP,
+    type: data.type,
     callbackResponse: callbackResponse,
   };
 }
