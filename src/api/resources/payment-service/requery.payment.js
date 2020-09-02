@@ -138,12 +138,11 @@ function handleWalletTopUp(data): TransactionMessaging {
     accountNumber: callbackResponse.accountDetails.accountNumber,
     vendor: data.vendor,
     type: data.type,
-    callbackResponse: callbackResponse,
+    callbackResponse: data.callback_response,
   };
 }
 
 function handleTerminal(data): TransactionMessaging {
-  const callbackResponse = data.callback_response.callback_response;
   return {
     paymentReference: data.payment_reference,
     amount: data.amount,
@@ -153,6 +152,6 @@ function handleTerminal(data): TransactionMessaging {
     walletId: data.wallet_id,
     vendor: data.vendor,
     type: data.type,
-    callbackResponse: callbackResponse,
+    callbackResponse: data.callback_response,
   };
 }
