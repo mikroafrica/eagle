@@ -1,5 +1,9 @@
 import moment from "moment";
 
+export const phcnTransactionType = "phcn";
+export const cableTransactionType = "cable_tv";
+export const airtimeTransactionType = "airtime";
+export const dataTransactionType = "data";
 export const transferTransactionType = "transfer";
 export const walletTopUpTransactionType = "wallet_top_up";
 export const withdrawalTransactionType = "withdrawal";
@@ -102,4 +106,9 @@ export type SlackModel = {
   title: string,
   channel: string,
   message: string,
+};
+
+export type ReQueryModel = {
+  vendor: string,
+  transactionReference: string,
 };
