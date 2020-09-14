@@ -112,3 +112,14 @@ export type ReQueryModel = {
   vendor: string,
   transactionReference: string,
 };
+
+export type BillingModel = {
+  transactionReference: string,
+  phoneNumber: string,
+  amount: number,
+  productId: string,
+  meterNumber: string,
+  type: string,
+  smartCardNumber: string,
+  category: string,
+};

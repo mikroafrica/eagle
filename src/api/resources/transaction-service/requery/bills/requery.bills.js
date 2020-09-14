@@ -19,7 +19,7 @@ import {
   pendingTransactionStatus,
   phcnTransactionType,
 } from "../../../commons/model";
-import type { ReQueryModel } from "../../../commons/model";
+import type { BillingModel, ReQueryModel } from "../../../commons/model";
 
 function reQueryPendingBills(callback) {
   const query = {
@@ -53,14 +53,21 @@ function reQueryPendingBills(callback) {
       logger.info(
         `Total number of queried transfer results is [${results.length}]`
       );
-      const reQueryModels: ReQueryModel[] = results.map(function (data) {
-        console.log(data);
+      const billingModels: BillingModel[] = results.map(function (data) {
         return {
           transactionReference: data.transaction_reference,
-          vendor: "",
+          vendor: data.vendor,
+          phoneNumber:
+            data.meta.data.customerPhoneNumber || data.customer_biller_id,
+          amount: data.amount,
+          productId: data.meta.data.productId,
+          meterNumber: data.customer_biller_id,
+          type: data.name.toUpperCase(),
+          smartCardNumber: data.customer_biller_id,
+          category: data.product,
         };
       });
-      callback(reQueryModels);
+      callback(billingModels);
 
       client.end();
     })
@@ -78,8 +85,8 @@ export const RetryBillsJob = (): CronJob => {
     const formattedDate = moment.tz("Africa/Lagos");
     logger.info(`::: reQuery for bills started ${formattedDate} :::`);
 
-    reQueryPendingBills(function (reQueryModels: ReQueryModel[]) {
-      reQueryBillEvent.emit(RE_QUERY_BILL_EMITTER, reQueryModels);
+    reQueryPendingBills(function (billingModels: BillingModel[]) {
+      reQueryBillEvent.emit(RE_QUERY_BILL_EMITTER, billingModels);
     });
   });
 };
