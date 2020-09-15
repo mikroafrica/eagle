@@ -45,7 +45,6 @@ function reQueryPendingBills(callback) {
   };
 
   const client = TransactionServiceClient();
-
   client
     .query(query)
     .then((response) => {
