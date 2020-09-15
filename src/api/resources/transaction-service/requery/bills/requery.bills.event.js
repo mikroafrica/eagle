@@ -81,7 +81,7 @@ ReQueryEmitter.on(RE_QUERY_BILL_EMITTER, function (
       }
     },
     () => {
-      if (reQueryModels.length > 0) {
+      if (billingModels.length > 0) {
         logger.info(`published all bills for reQuery`);
       }
     }
