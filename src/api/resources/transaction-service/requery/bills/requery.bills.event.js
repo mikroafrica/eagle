@@ -102,7 +102,6 @@ function publishReQuery(reQueryModel: ReQueryModel) {
         logger.error(`error occurred while publishing transfer [${err}]`);
         reject();
       }
-
       logger.info(`published reQuery bills [${reQueryModel}]`);
 
       resolve();
