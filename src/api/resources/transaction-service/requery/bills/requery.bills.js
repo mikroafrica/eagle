@@ -19,7 +19,7 @@ import {
   pendingTransactionStatus,
   phcnTransactionType,
 } from "../../../commons/model";
-import type { BillingModel, ReQueryModel } from "../../../commons/model";
+import type { BillingModel } from "../../../commons/model";
 
 function reQueryPendingBills(callback) {
   const query = {

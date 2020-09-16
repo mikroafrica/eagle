@@ -102,7 +102,7 @@ function publishReQuery(reQueryModel: ReQueryModel) {
         logger.error(`error occurred while publishing transfer [${err}]`);
         reject();
       }
-      logger.info(`published reQuery bills [${reQueryModel}]`);
+      logger.info(`published reQuery bills [${JSON.stringify(reQueryModel)}]`);
 
       resolve();
     });
@@ -124,7 +124,9 @@ function publishBillReprocessing(billModel: BillingModel) {
         reject();
       }
 
-      logger.info(`::: published bills processing [${billModel}] :::`);
+      logger.info(
+        `::: published bills processing [${JSON.stringify(billModel)}] :::`
+      );
 
       resolve();
     });
