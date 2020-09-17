@@ -61,9 +61,9 @@ function reQueryPendingBills(callback) {
           amount: data.amount,
           productId: data.meta.data.productId,
           meterNumber: data.customer_biller_id,
-          type: data.name.toUpperCase(),
+          type: data.name,
           smartCardNumber: data.customer_biller_id,
-          category: data.product,
+          category: data.name,
         };
       });
       callback(billingModels);

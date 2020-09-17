@@ -52,8 +52,7 @@ function reQueryPendingTransfer(callback) {
         `Total number of queried transfer results is [${results.length}]`
       );
       const paymentListDto: PaymentDto[] = results.map(function (data) {
-        const serviceFee = data.meta.data.serviceFee;
-        const amount = parseFloat(data.amount) - parseFloat(serviceFee);
+        const amount = parseFloat(data.amount);
         return {
           userId: data.user_id,
           amount: amount,
