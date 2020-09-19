@@ -4,7 +4,7 @@ import { get, post, put } from "../commons/request";
 const request = () => {
   const client = restify.createJSONClient({
     url: process.env.MEDIA_SERVICE_URL,
-    version: "*"
+    version: "*",
   });
 
   client.basicAuth(
@@ -14,6 +14,12 @@ const request = () => {
   return client;
 };
 
-export const fileReport = ({ params }) => {
-  return post({ client: request, path: "/file", params });
+export const fileReport = ({ params, format }) => {
+  const path = {
+    path: "/file",
+    query: {
+      format,
+    },
+  };
+  return post({ client: request, path, params });
 };

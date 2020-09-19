@@ -123,9 +123,10 @@ export const PreviousDayRetentionReportJob = (): CronJob => {
 };
 
 function pushReportToSlack(report, filename, time) {
-  const params = { report, filename, type: "csv" };
+  const params = { report, filename };
+  const format = "csv";
 
-  fileReport({ params })
+  fileReport({ params, format })
     .then((responseData) => {
       const retentionData = responseData.data;
       const retentionLink = retentionData.data.url;
