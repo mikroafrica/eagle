@@ -67,6 +67,7 @@ function reQueryPendingWalletTopUp(callback) {
             type: TransactionMessagingType.WALLET_TOP_UP,
             // callbackResponse: data.gateway_response, this is not necessary to return back to the user
             walletId: data.destination_wallet_id,
+            timeCreated: data.time_created
           };
           const transactionReference = data.transaction_reference;
           return {
