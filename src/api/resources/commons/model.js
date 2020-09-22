@@ -80,6 +80,7 @@ export type TransactionMessaging = {
   walletId: string,
   userId: string,
   terminalId: string,
+  timeCreated: number
 };
 
 export type TransactionMessagingContainer = {

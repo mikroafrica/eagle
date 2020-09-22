@@ -65,6 +65,7 @@ function reQueryPendingWithdrawalWalletTopUp(callback) {
           // callbackResponse: data.gateway_response, this is not necessary to return back to the user
           userId: data.user_id,
           walletId: data.destination_wallet_id,
+          timeCreated: data.time_created
         };
       });
       callback(transactionMessaging);
