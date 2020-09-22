@@ -14,12 +14,9 @@ const request = () => {
   return client;
 };
 
-export const fileReport = ({ params, format }) => {
+export const fileReport = ({ params }) => {
   const path = {
     path: "/file",
-    query: {
-      format,
-    },
   };
   return post({ client: request, path, params });
 };

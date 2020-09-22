@@ -139,6 +139,7 @@ function handleWalletTopUp(data): TransactionMessaging {
     vendor: data.vendor,
     type: data.type,
     callbackResponse: data.callback_response,
+    timeCreated: data.time_created
   };
 }
 
