@@ -112,21 +112,26 @@ function computeRetentionReport(reportCallback) {
 
 // run job at every 2:30 A.M
 export const PreviousDayRetentionReportJob = (): CronJob => {
-  return new CronJob("0 30 2 * * *", function () {
-    const formattedDate = moment.tz("Africa/Lagos");
-    logger.info(`::: Retention report @ ${formattedDate} :::`);
+  return new CronJob(
+    "0 30 2 * * *",
+    function () {
+      const formattedDate = moment.tz("Africa/Lagos");
+      logger.info(`::: Retention report @ ${formattedDate} :::`);
 
-    computeRetentionReport(function (data, filename, time) {
-      pushReportToSlack(data, filename, time);
-    });
-  }, undefined, true, "Africa/Lagos");
+      computeRetentionReport(function (data, filename, time) {
+        pushReportToSlack(data, filename, time);
+      });
+    },
+    undefined,
+    true,
+    "Africa/Lagos"
+  );
 };
 
 function pushReportToSlack(report, filename, time) {
-  const params = { report, filename };
-  const format = "csv";
+  const params = { report, filename, type: "csv" };
 
-  fileReport({ params, format })
+  fileReport({ params })
     .then((responseData) => {
       const retentionData = responseData.data;
       const retentionLink = retentionData.data.url;
