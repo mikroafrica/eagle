@@ -55,6 +55,7 @@ function reQueryPendingWithdrawalWalletTopUp(callback) {
       const transactionMessaging: TransactionMessaging = results.map(function (
         data
       ) {
+        logger.info(`data object is  ${JSON.stringify(data)}`);
         return {
           paymentReference: data.unique_identifier,
           amount: data.amount,
@@ -65,7 +66,7 @@ function reQueryPendingWithdrawalWalletTopUp(callback) {
           // callbackResponse: data.gateway_response, this is not necessary to return back to the user
           userId: data.user_id,
           walletId: data.destination_wallet_id,
-          timeCreated: data.time_created
+          timeCreated: data.time_created,
         };
       });
       callback(transactionMessaging);
@@ -74,7 +75,7 @@ function reQueryPendingWithdrawalWalletTopUp(callback) {
     })
     .catch((error) => {
       logger.error(
-        `error occurred while fetching pending with error [${error}]`
+        `error occurred while fetching pending withdrawal transaction on transaction service level with error [${error}]`
       );
     });
 }

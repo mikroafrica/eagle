@@ -67,7 +67,7 @@ function reQueryPendingWalletTopUp(callback) {
             type: TransactionMessagingType.WALLET_TOP_UP,
             // callbackResponse: data.gateway_response, this is not necessary to return back to the user
             walletId: data.destination_wallet_id,
-            timeCreated: data.time_created
+            timeCreated: data.time_created,
           };
           const transactionReference = data.transaction_reference;
           return {
@@ -82,7 +82,7 @@ function reQueryPendingWalletTopUp(callback) {
     })
     .catch((error) => {
       logger.error(
-        `error occurred while fetching pending with error [${error}]`
+        `error occurred while fetching pending wallet topup from transaction service with error [${error}]`
       );
     });
 }
