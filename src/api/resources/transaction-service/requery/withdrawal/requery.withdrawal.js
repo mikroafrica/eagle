@@ -55,7 +55,6 @@ function reQueryPendingWithdrawalWalletTopUp(callback) {
       const transactionMessaging: TransactionMessaging = results.map(function (
         data
       ) {
-        logger.info(`data object is  ${JSON.stringify(data)}`);
         return {
           paymentReference: data.unique_identifier,
           amount: data.amount,
