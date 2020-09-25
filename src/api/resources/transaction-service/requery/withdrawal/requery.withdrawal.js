@@ -59,7 +59,7 @@ function reQueryPendingWithdrawalWalletTopUp(callback) {
         return {
           paymentReference: data.unique_identifier,
           amount: data.amount,
-          vendor: data.meta.data.vendor,
+          vendor: data.vendor,
           paymentStatus: TransactionStatus.SUCCESS,
           type: TransactionMessagingType.TERMINAL,
           terminalId: data.customer_biller_id,
