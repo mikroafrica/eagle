@@ -28,8 +28,8 @@ function reQueryPendingWalletTopTransfer(callback) {
     values: [
       handShakeStatus,
       TransactionMessagingType.WALLET_TOP_UP,
-      pastHour(),
-      now(),
+      morning(),
+      night(),
     ],
   };
 
