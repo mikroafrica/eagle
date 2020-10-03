@@ -60,7 +60,10 @@ function reQueryPendingWalletTopUp(callback) {
           const transactionMessaging: TransactionMessaging = {
             paymentReference: data.unique_identifier,
             amount: data.amount,
-            accountNumber: data.userdata.meta.accountNumber,
+            // vendor fucked us up, we had to justapox
+            accountNumber: data.userdata.meta
+              ? data.userdata.meta.accountNumber
+              : "",
             paymentStatus: TransactionStatus.SUCCESS,
             email: data.userdata.meta.accountEmail,
             vendor: data.meta.data.vendor,

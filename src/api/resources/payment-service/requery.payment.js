@@ -58,9 +58,7 @@ function reQueryPendingWalletTopTransfer(callback) {
     });
 }
 
-
 function reQueryPendingTerminal(callback) {
-
   const handShakeStatus = "PUBLISHED_SUCCESSFUL";
   const query = {
     text:
@@ -135,11 +133,14 @@ function handleWalletTopUp(data): TransactionMessaging {
     amount: data.amount,
     paymentStatus: data.status,
     email: callbackResponse.customer.email,
-    accountNumber: callbackResponse.accountDetails.accountNumber,
+    // vendor fucked us up, we had to justapox
+    accountNumber: callbackResponse.accountDetails
+      ? callbackResponse.accountDetails.accountNumber
+      : "",
     vendor: data.vendor,
     type: data.type,
     callbackResponse: data.callback_response,
-    timeCreated: data.time_created
+    timeCreated: data.time_created,
   };
 }
 
