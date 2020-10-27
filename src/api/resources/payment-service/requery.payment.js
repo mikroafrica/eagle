@@ -64,10 +64,12 @@ function reQueryPendingTerminal(callback) {
     text:
       "SELECT * FROM transactions tnx " +
       "JOIN terminals terminalPro ON callback_response -> 'callback_response' ->> 'terminalID' = terminalPro.terminal_id " +
-      "WHERE tnx.type = $1 ",
+      "WHERE tnx.type = $1 AND tnx.time_created >= $2 AND tnx.time_created <= $3",
 
     values: [
-      TransactionMessagingType.TERMINAL
+      TransactionMessagingType.TERMINAL,
+      1603666800000,
+      1603753140000
     ],
   };
 
@@ -97,7 +99,7 @@ function reQueryPendingTerminal(callback) {
 }
 
 export const RetryPaymentWalletTopUpJob = (): CronJob => {
-  return new CronJob("0 */5 * * * *", function () {
+  return new CronJob("0 */2 * * * *", function () {
     const formattedDate = moment.tz("Africa/Lagos");
     logger.info(`::: re-processing for payment started ${formattedDate} :::`);
 
