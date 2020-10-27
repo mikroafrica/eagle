@@ -64,7 +64,7 @@ function reQueryPendingTerminal(callback) {
     text:
       "SELECT * FROM transactions tnx " +
       "JOIN terminals terminalPro ON callback_response -> 'callback_response' ->> 'terminalID' = terminalPro.terminal_id " +
-      "WHERE tnx.type = 1 ",
+      "WHERE tnx.type = $1 ",
 
     values: [
       TransactionMessagingType.TERMINAL
