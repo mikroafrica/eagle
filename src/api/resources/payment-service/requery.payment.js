@@ -59,17 +59,20 @@ function reQueryPendingWalletTopTransfer(callback) {
 }
 
 function reQueryPendingTerminal(callback) {
-  const handShakeStatus = "PUBLISHED_COMPLETED";
+  const handShakeStatus = "PUBLISHED_SUCCESSFUL";
   const query = {
     text:
       "SELECT *, tnx.time_created as tnxDate FROM transactions tnx " +
       "JOIN terminals terminalPro ON callback_response -> 'callback_response' ->> 'terminalID' = terminalPro.terminal_id " +
-      "WHERE tnx.type = $1 AND tnx.time_created >= $2 AND tnx.time_created <= $3",
+      "WHERE handshake_status = $1 AND tnx.type = $2 " +
+      "AND tnx.time_created >= $3 AND tnx.time_created <= $4 ",
 
     values: [
+      handShakeStatus,
       TransactionMessagingType.TERMINAL,
+      // morning(),
       1603666800000,
-      1603753140000
+      night(),
     ],
   };
 
@@ -99,7 +102,7 @@ function reQueryPendingTerminal(callback) {
 }
 
 export const RetryPaymentWalletTopUpJob = (): CronJob => {
-  return new CronJob("0 */2 * * * *", function () {
+  return new CronJob("0 */5 * * * *", function () {
     const formattedDate = moment.tz("Africa/Lagos");
     logger.info(`::: re-processing for payment started ${formattedDate} :::`);
 
@@ -112,7 +115,7 @@ export const RetryPaymentWalletTopUpJob = (): CronJob => {
 };
 
 export const RetryPaymentTerminalJob = (): CronJob => {
-  return new CronJob("0 */4 * * * *", function () {
+  return new CronJob("0 */15 * * * *", function () {
     const formattedDate = moment.tz("Africa/Lagos");
     logger.info(`::: re-processing for payment started ${formattedDate} :::`);
 
