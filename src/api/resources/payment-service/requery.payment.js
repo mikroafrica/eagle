@@ -59,20 +59,14 @@ function reQueryPendingWalletTopTransfer(callback) {
 }
 
 function reQueryPendingTerminal(callback) {
-  const handShakeStatus = "PUBLISHED_SUCCESSFUL";
+  const handShakeStatus = "PUBLISHED_COMPLETED";
   const query = {
     text:
       "SELECT * FROM transactions tnx " +
       "JOIN terminals terminalPro ON callback_response -> 'callback_response' ->> 'terminalID' = terminalPro.terminal_id " +
-      "WHERE handshake_status = $1 AND tnx.type = $2 " +
-      "AND tnx.time_created >= $3 AND tnx.time_created <= $4 ",
+      "WHERE handshake_status != $1 AND tnx.type = $2 ",
 
-    values: [
-      handShakeStatus,
-      TransactionMessagingType.TERMINAL,
-      morning(),
-      night(),
-    ],
+    values: [handShakeStatus, TransactionMessagingType.TERMINAL],
   };
 
   const client = PaymentServiceClient();
@@ -155,5 +149,6 @@ function handleTerminal(data): TransactionMessaging {
     vendor: data.vendor,
     type: data.type,
     callbackResponse: data.callback_response,
+    timeCreated: data.time_created,
   };
 }
