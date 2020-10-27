@@ -70,8 +70,7 @@ function reQueryPendingTerminal(callback) {
     values: [
       handShakeStatus,
       TransactionMessagingType.TERMINAL,
-      // morning(),
-      1603666800000,
+      morning(),
       night(),
     ],
   };
@@ -115,7 +114,7 @@ export const RetryPaymentWalletTopUpJob = (): CronJob => {
 };
 
 export const RetryPaymentTerminalJob = (): CronJob => {
-  return new CronJob("0 */15 * * * *", function () {
+  return new CronJob("0 */5 * * * *", function () {
     const formattedDate = moment.tz("Africa/Lagos");
     logger.info(`::: re-processing for payment started ${formattedDate} :::`);
 
