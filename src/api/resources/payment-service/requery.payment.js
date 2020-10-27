@@ -143,7 +143,6 @@ function handleWalletTopUp(data): TransactionMessaging {
 }
 
 function handleTerminal(data): TransactionMessaging {
-  console.log(data)
   return {
     paymentReference: data.payment_reference,
     amount: data.amount,
