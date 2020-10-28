@@ -25,7 +25,7 @@ PreviousDayRetentionReportJob().start();
 PreviousDayTerminalReportJob().start();
 
 RetryPaymentWalletTopUpJob().start();
-// RetryPaymentTerminalJob().start();
+RetryPaymentTerminalJob().start();
 RetryBillsJob().start();
 
 const port = process.env.PORT || 3000;
