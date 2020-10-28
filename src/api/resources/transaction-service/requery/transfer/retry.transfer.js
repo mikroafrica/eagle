@@ -13,6 +13,7 @@ import {
   night,
   paymentSuccessfulTransactionStatus,
   pendingTransactionStatus,
+  previousDayInMorning,
   transferTransactionType,
 } from "../../../commons/model";
 import type { PaymentDto } from "../../../commons/model";
@@ -37,7 +38,7 @@ function reQueryPendingTransfer(callback) {
       paymentSuccessfulTransactionStatus,
       billerPurchaseTransactionStatus,
       transferTransactionType,
-      morning(),
+      previousDayInMorning(),
       night(),
     ],
   };
