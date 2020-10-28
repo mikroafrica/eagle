@@ -70,7 +70,8 @@ function reQueryPendingTerminal(callback) {
     values: [
       handShakeStatus,
       TransactionMessagingType.TERMINAL,
-      morning(),
+      1603917360000,
+      // morning(),
       night(),
     ],
   };
