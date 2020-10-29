@@ -3,21 +3,31 @@ const CronJob = cron.CronJob;
 
 import moment from "moment";
 import logger from "../../../logger";
-import {
-  morning,
-  night,
-  now,
-  pastHour,
-  previousDayAtNight,
-  TransactionMessagingType,
-  TransactionStatus,
-} from "../commons/model";
+import { morning, night, TransactionMessagingType } from "../commons/model";
 import { PaymentServiceClient } from "../../db";
 import type { TransactionMessaging } from "../commons/model";
 import { PAYMENT_EMITTER } from "./requery.payment.event";
 import paymentEvent from "./requery.payment.event";
 
-function reQueryPendingWalletTopTransfer(callback) {
+function handleWalletTopUp(data): TransactionMessaging {
+  const callbackResponse = data.callback_response.callback_response;
+  return {
+    paymentReference: data.payment_reference,
+    amount: data.amount,
+    paymentStatus: data.status,
+    email: callbackResponse.customer.email,
+    // vendor fucked us up, we had to justapox
+    accountNumber: callbackResponse.accountDetails
+      ? callbackResponse.accountDetails.accountNumber
+      : "",
+    vendor: data.vendor,
+    type: data.type,
+    callbackResponse: data.callback_response,
+    timeCreated: data.time_created,
+  };
+}
+
+function reQueryPendingWalletTop(callback) {
   const handShakeStatus = "PUBLISHED_SUCCESSFUL";
   const query = {
     text:
@@ -58,20 +68,57 @@ function reQueryPendingWalletTopTransfer(callback) {
     });
 }
 
+export const RetryPaymentWalletTopUpJob = (): CronJob => {
+  return new CronJob("0 */5 * * * *", function () {
+    const formattedDate = moment.tz("Africa/Lagos");
+    logger.info(
+      `::: Wallet top-up from payment db processing for payment started ${formattedDate} :::`
+    );
+
+    reQueryPendingWalletTop(function (
+      transactionMessaging: TransactionMessaging[]
+    ) {
+      paymentEvent.emit(PAYMENT_EMITTER, transactionMessaging);
+    });
+  });
+};
+
+/**
+ * handle withdrawals with handshake of published_successful
+ */
+
+function handleTerminal(data): TransactionMessaging {
+  return {
+    paymentReference: data.payment_reference,
+    amount: data.amount,
+    paymentStatus: data.status,
+    userId: data.user_id,
+    terminalId: data.terminal_id,
+    walletId: data.wallet_id,
+    vendor: data.vendor,
+    type: data.type,
+    callbackResponse: data.callback_response,
+    timeCreated: data.tnxdate,
+  };
+}
+
 function reQueryPendingTerminal(callback) {
   const handShakeStatus = "PUBLISHED_SUCCESSFUL";
+
+  // fetch first 20 transactions in ascending order
   const query = {
     text:
       "SELECT *, tnx.time_created as tnxDate FROM transactions tnx " +
-      "JOIN terminals terminalPro ON callback_response -> 'callback_response' ->> 'terminalID' = terminalPro.terminal_id " +
+      "JOIN terminals terminalPro ON " +
+      "callback_response -> 'callback_response' ->> 'terminalID' = terminalPro.terminal_id " +
       "WHERE handshake_status = $1 AND tnx.type = $2 " +
-      "AND tnx.time_created >= $3 AND tnx.time_created <= $4 ",
+      "AND tnx.time_created >= $3 AND tnx.time_created <= $4 " +
+      "ORDER BY tnx.time_created ASC limit 20",
 
     values: [
       handShakeStatus,
       TransactionMessagingType.TERMINAL,
-      1603917360000,
-      // morning(),
+      morning(),
       night(),
     ],
   };
@@ -101,21 +148,8 @@ function reQueryPendingTerminal(callback) {
     });
 }
 
-export const RetryPaymentWalletTopUpJob = (): CronJob => {
-  return new CronJob("0 */5 * * * *", function () {
-    const formattedDate = moment.tz("Africa/Lagos");
-    logger.info(`::: re-processing for payment started ${formattedDate} :::`);
-
-    reQueryPendingWalletTopTransfer(function (
-      transactionMessaging: TransactionMessaging[]
-    ) {
-      paymentEvent.emit(PAYMENT_EMITTER, transactionMessaging);
-    });
-  });
-};
-
 export const RetryPaymentTerminalJob = (): CronJob => {
-  return new CronJob("0 */5 * * * *", function () {
+  return new CronJob("0 */15 * * * *", function () {
     const formattedDate = moment.tz("Africa/Lagos");
     logger.info(`::: re-processing for payment started ${formattedDate} :::`);
 
@@ -126,36 +160,3 @@ export const RetryPaymentTerminalJob = (): CronJob => {
     });
   });
 };
-
-function handleWalletTopUp(data): TransactionMessaging {
-  const callbackResponse = data.callback_response.callback_response;
-  return {
-    paymentReference: data.payment_reference,
-    amount: data.amount,
-    paymentStatus: data.status,
-    email: callbackResponse.customer.email,
-    // vendor fucked us up, we had to justapox
-    accountNumber: callbackResponse.accountDetails
-      ? callbackResponse.accountDetails.accountNumber
-      : "",
-    vendor: data.vendor,
-    type: data.type,
-    callbackResponse: data.callback_response,
-    timeCreated: data.time_created,
-  };
-}
-
-function handleTerminal(data): TransactionMessaging {
-  return {
-    paymentReference: data.payment_reference,
-    amount: data.amount,
-    paymentStatus: data.status,
-    userId: data.user_id,
-    terminalId: data.terminal_id,
-    walletId: data.wallet_id,
-    vendor: data.vendor,
-    type: data.type,
-    callbackResponse: data.callback_response,
-    timeCreated: data.tnxdate
-  };
-}
