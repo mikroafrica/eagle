@@ -128,7 +128,9 @@ function publishBillReprocessing(billModel: BillingModel) {
       }
 
       logger.info(
-        `::: published bills processing [${JSON.stringify(billModel)}] :::`
+        `::: published bills processing [${JSON.stringify(
+          billModel.transactionReference
+        )}] :::`
       );
 
       resolve();
