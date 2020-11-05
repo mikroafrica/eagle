@@ -56,6 +56,11 @@ export const previousDayAtNight = () => {
   return previousDay("11:59 PM");
 };
 
+export const firstDayOfMonth = () => {
+  const firstdate = moment().startOf("month").format("YYYY-MM-DD");
+  return moment(`${firstdate} 00:00:00`).tz("Africa/Lagos").format("x");
+};
+
 export type PaymentDto = {
   userId: string,
   amount: number,
@@ -80,7 +85,7 @@ export type TransactionMessaging = {
   walletId: string,
   userId: string,
   terminalId: string,
-  timeCreated: number
+  timeCreated: number,
 };
 
 export type TransactionMessagingContainer = {
