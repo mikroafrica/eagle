@@ -29,7 +29,7 @@ RetryPaymentWalletTopUpJob().start();
 RetryPaymentTerminalJob().start();
 RetryBillsJob().start();
 
-PreviousDayTargetReportJob().start();
+// PreviousDayTargetReportJob().start();
 
 const port = process.env.PORT || 3000;
 server.listen(port, function () {
