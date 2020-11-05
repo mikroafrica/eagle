@@ -10,7 +10,6 @@ import {
   convertTimeStampToDate,
   firstDayOfMonth,
   previousDayAtNight,
-  previousDayInMorning,
 } from "../../commons/model";
 import { TransactionServiceClient } from "../../../db";
 
@@ -33,9 +32,6 @@ function computeTargetReport() {
 
       const firstDayOfTheMonth = firstDayOfMonth();
       const pastDayAtNight = previousDayAtNight();
-
-      console.log(firstDayOfTheMonth)
-      console.log(pastDayAtNight)
 
       dbo
         .collection("user")
@@ -118,10 +114,10 @@ function computeTargetReport() {
   );
 }
 
-// run job at every 1:00 A.M
+// run job at every 3:30 A.M
 export const PreviousDayTargetReportJob = (): CronJob => {
   return new CronJob(
-    "0 45 13 * * *",
+    "0 30 3 * * *",
     function () {
       const formattedDate = moment.tz("Africa/Lagos");
       logger.info(`::: Retention report @ ${formattedDate} :::`);
