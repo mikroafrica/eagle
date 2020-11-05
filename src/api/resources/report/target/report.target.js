@@ -121,7 +121,7 @@ function computeTargetReport() {
 // run job at every 1:00 A.M
 export const PreviousDayTargetReportJob = (): CronJob => {
   return new CronJob(
-    "0 40 13 * * *",
+    "0 45 13 * * *",
     function () {
       const formattedDate = moment.tz("Africa/Lagos");
       logger.info(`::: Retention report @ ${formattedDate} :::`);
