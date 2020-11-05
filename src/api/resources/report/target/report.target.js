@@ -31,11 +31,11 @@ function computeTargetReport() {
 
       const client = TransactionServiceClient();
 
-      const reportArr = [];
-
-      // TODO: compute beginning of the month to yesterday
       const firstDayOfTheMonth = firstDayOfMonth();
       const pastDayAtNight = previousDayAtNight();
+
+      console.log(firstDayOfTheMonth)
+      console.log(pastDayAtNight)
 
       dbo
         .collection("user")
@@ -69,12 +69,15 @@ function computeTargetReport() {
                 .query(query)
                 .then((response) => {
                   const results = response.rows;
-                  console.log(results);
 
                   if (results.length !== 0) {
                     const userId = ObjectId(user._id);
-                    const totalTransactionPerMonth = results[0].successfulamount || 0;
-                    const totalTransactionCountPerMonth = results[0].count;
+                    const totalTransactionPerMonth = parseFloat(
+                      results[0].successfulamount || 0
+                    );
+                    const totalTransactionCountPerMonth = parseFloat(
+                      results[0].count
+                    );
 
                     dbo.collection("user").findOneAndUpdate(
                       { _id: userId },
@@ -87,7 +90,7 @@ function computeTargetReport() {
                       { new: true },
                       function (err, doc) {
                         logger.info(
-                          `transaction per month info updated for user [${userId}]`
+                          `transaction per month info updated for user [${userId}] : count [${totalTransactionCountPerMonth}] value: [${totalTransactionPerMonth}]`
                         );
                         callback();
                       }
@@ -105,13 +108,9 @@ function computeTargetReport() {
             },
             (err) => {
               logger.info(
-                `Total data for retention found is ${reportArr.length}`
+                `Users transaction info updated`
               );
               client.end();
-
-              const time = convertTimeStampToDate(pastDayInMorning);
-              const fileName = `Retention Report - ${time}`;
-              reportCallback(reportArr, fileName, time);
             }
           );
         });
@@ -122,8 +121,7 @@ function computeTargetReport() {
 // run job at every 1:00 A.M
 export const PreviousDayTargetReportJob = (): CronJob => {
   return new CronJob(
-    "* * * * * *",
-    // "0 0 1 * * *",
+    "0 45 13 * * *",
     function () {
       const formattedDate = moment.tz("Africa/Lagos");
       logger.info(`::: Retention report @ ${formattedDate} :::`);
