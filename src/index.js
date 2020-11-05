@@ -11,6 +11,7 @@ import {
   RetryPaymentWalletTopUpJob,
 } from "./api/resources/payment-service/requery.payment";
 import { RetryBillsJob } from "./api/resources/transaction-service/requery/bills";
+import { PreviousDayTargetReportJob } from "./api/resources/report/target";
 
 // handle all uncaught errors
 process.on("uncaughtException", function (err) {
@@ -27,6 +28,8 @@ PreviousDayTerminalReportJob().start();
 RetryPaymentWalletTopUpJob().start();
 RetryPaymentTerminalJob().start();
 RetryBillsJob().start();
+
+// PreviousDayTargetReportJob().start();
 
 const port = process.env.PORT || 3000;
 server.listen(port, function () {
