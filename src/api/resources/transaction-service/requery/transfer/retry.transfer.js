@@ -60,7 +60,7 @@ function reQueryPendingTransfer(callback) {
           userId: data.user_id,
           amount: amount,
           remarks: data.userdata.remarks,
-          paymentDate: data.time_created,
+          paymentDate: data.time_updated,
           transactionRef: data.transaction_reference,
           accountNumber: data.customer_biller_id,
           paymentType: PaymentType.BANK_TRANSFER_REQUERY,
