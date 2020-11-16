@@ -103,7 +103,7 @@ function handleTerminal(data): TransactionMessaging {
 }
 
 function reQueryPendingTerminal(callback) {
-  const handShakeStatus = "PUBLISHED_SUCCESSFUL";
+  const handShakeStatus = "PUBLISHED_COMPLETED";
 
   // fetch first 20 transactions in ascending order
   const query = {
@@ -111,7 +111,7 @@ function reQueryPendingTerminal(callback) {
       "SELECT *, tnx.time_created as tnxDate FROM transactions tnx " +
       "JOIN terminals terminalPro ON " +
       "callback_response -> 'callback_response' ->> 'terminalID' = terminalPro.terminal_id " +
-      "WHERE handshake_status = $1 AND tnx.type = $2 " +
+      "WHERE handshake_status != $1 AND tnx.type = $2 " +
       "AND tnx.time_created >= $3 AND tnx.time_created <= $4 " +
       "ORDER BY tnx.time_created ASC limit 20",
 
