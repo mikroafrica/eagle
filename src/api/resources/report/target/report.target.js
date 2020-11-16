@@ -53,8 +53,8 @@ function computeTargetReport() {
               // compute all user transaction query by user id
               const query = {
                 text:
-                  "SELECT SUM(CASE WHEN status.name = 'successful' THEN tnx.amount else 0 END) AS successfulAmount, " +
-                  "COUNT(CASE WHEN status.name = 'successful' THEN 1 else 0 END) AS successfulCount " +
+                  "SELECT SUM(CASE WHEN status.name = 'successful' THEN tnx.amount ELSE 0 END) AS successfulAmount, " +
+                  "COUNT(CASE WHEN status.name = 'successful' THEN 1 ELSE NULL END) AS successfulCount " +
                   "FROM public.transactions AS tnx JOIN public.transaction_types AS tnxType ON tnx.transaction_type = tnxType.id " +
                   "JOIN public.transaction_statuses status ON  status.id = tnx.transaction_status " +
                   "WHERE tnx.time_created >= $1 AND tnx.time_created <= $2 AND tnx.user_id = $3",
@@ -117,7 +117,7 @@ function computeTargetReport() {
 // run job at every 1:20 A.M
 export const PreviousDayTargetReportJob = (): CronJob => {
   return new CronJob(
-    "0 20 1 * * *",
+    "0 40 2 * * *",
     function () {
       const formattedDate = moment.tz("Africa/Lagos");
       logger.info(`::: Retention report @ ${formattedDate} :::`);
