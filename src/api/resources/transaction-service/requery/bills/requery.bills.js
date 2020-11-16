@@ -50,7 +50,7 @@ function reQueryPendingBills(callback) {
     .then((response) => {
       const results = response.rows;
       logger.info(
-        `Total number of queried transfer results is [${results.length}]`
+        `Total number of queried bills results is [${results.length}]`
       );
       const billingModels: BillingModel[] = results.map(function (data) {
         return {

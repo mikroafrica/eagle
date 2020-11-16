@@ -42,36 +42,20 @@ ReQueryEmitter.on(RE_QUERY_BILL_EMITTER, function (
       let updatedRetryCount = transactionObject.retryCount;
       let updatedReProcessCount = transactionObject.reProcessCount || 0;
 
-      if (transactionObject.retryCount >= 4) {
-        logger.info(
-          `::: transaction reference logged for re-processing [${transactionReference}] :::`
+      updatedRetryCount = updatedRetryCount + 1;
+
+      const reQueryModel: ReQueryModel = {
+        vendor: billingModel.vendor,
+        transactionReference: billingModel.transactionReference,
+      };
+
+      // push payment dto to kafka for further processing
+      try {
+        await publishReQuery(reQueryModel, transactionReference);
+      } catch (e) {
+        logger.error(
+          `::: reQuery bills failed with error [${JSON.stringify(e)}] :::`
         );
-        updatedRetryCount = 0;
-        updatedReProcessCount = updatedReProcessCount + 1;
-
-        try {
-          await publishBillReprocessing(billingModel);
-        } catch (e) {
-          logger.error(
-            `::: processing bills failed with error [${JSON.stringify(e)}] :::`
-          );
-        }
-      } else {
-        updatedRetryCount = updatedRetryCount + 1;
-
-        const reQueryModel: ReQueryModel = {
-          vendor: billingModel.vendor,
-          transactionReference: billingModel.transactionReference,
-        };
-
-        // push payment dto to kafka for further processing
-        try {
-          await publishReQuery(reQueryModel, transactionReference);
-        } catch (e) {
-          logger.error(
-            `::: reQuery bills failed with error [${JSON.stringify(e)}] :::`
-          );
-        }
       }
 
       // update the transaction with its number of retry count
