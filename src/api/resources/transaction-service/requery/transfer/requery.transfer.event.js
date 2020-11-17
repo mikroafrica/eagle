@@ -43,7 +43,7 @@ ReQueryEmitter.on(REQUERY_TRANSACTION_EMITTER, function (
       let updatedRetryCount = transactionObject.retryCount;
       let updatedReProcessCount = transactionObject.reProcessCount || 0;
 
-      if (transactionObject.retryCount > 3) {
+      if (transactionObject.retryCount >= 3) {
         logger.info(
           `::: transaction reference logged for re-processing [${transactionReference}] :::`
         );
