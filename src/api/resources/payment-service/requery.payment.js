@@ -114,7 +114,7 @@ function reQueryPendingTerminal(callback) {
       "callback_response -> 'callback_response' ->> 'terminalID' = terminalPro.terminal_id " +
       "WHERE handshake_status != $1 AND handshake_status != $2 AND tnx.type = $3 " +
       "AND tnx.time_created >= $4 AND tnx.time_created <= $5 " +
-      "ORDER BY tnx.time_created ASC limit 20",
+      "ORDER BY tnx.time_created ASC limit 25",
 
     values: [
       initHandShakeStatus,
@@ -151,7 +151,7 @@ function reQueryPendingTerminal(callback) {
 }
 
 export const RetryPaymentTerminalJob = (): CronJob => {
-  return new CronJob("0 */3 * * * *", function () {
+  return new CronJob("0 */5 * * * *", function () {
     const formattedDate = moment.tz("Africa/Lagos");
     logger.info(`::: re-processing for payment started ${formattedDate} :::`);
 
