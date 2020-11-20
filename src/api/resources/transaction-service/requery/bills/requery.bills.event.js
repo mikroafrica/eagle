@@ -44,8 +44,14 @@ ReQueryEmitter.on(RE_QUERY_BILL_EMITTER, function (
 
       updatedRetryCount = updatedRetryCount + 1;
 
+      let vendor = "kMeta";
+      // TODO: remove later
+      if (updatedRetryCount >= 2) {
+        vendor = "vtPass";
+      }
+
       const reQueryModel: ReQueryModel = {
-        vendor: billingModel.vendor,
+        vendor: billingModel.vendor || vendor,
         transactionReference: billingModel.transactionReference,
       };
 
