@@ -10,7 +10,7 @@ const schema = {
   },
 
   reProcessCount: {
-    type: Number
+    type: Number,
   },
 };
 

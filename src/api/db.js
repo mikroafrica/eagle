@@ -1,7 +1,9 @@
 import pg from "pg";
+
 const Client = pg.Client;
 
 import mongoose from "mongoose";
+
 mongoose.Promise = global.Promise;
 
 import logger from "../logger";
@@ -46,4 +48,3 @@ export const connect = () =>
     })
     .then(() => logger.info("Database connected successfully"))
     .catch((e) => logger.error(`Failed to connect with error ${e}`));
-

@@ -1,4 +1,5 @@
 import cron from "cron";
+
 const CronJob = cron.CronJob;
 
 import moment from "moment";
@@ -63,7 +64,8 @@ function reQueryPendingWithdrawalWalletTopUp(callback) {
           paymentStatus: TransactionStatus.SUCCESS,
           type: TransactionMessagingType.TERMINAL,
           terminalId: data.customer_biller_id,
-          // callbackResponse: data.gateway_response, this is not necessary to return back to the user
+          // callbackResponse: data.gateway_response, this is not necessary to return
+          // back to the user
           userId: data.user_id,
           walletId: data.destination_wallet_id,
           timeCreated: data.time_created,

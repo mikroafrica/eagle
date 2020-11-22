@@ -1,4 +1,5 @@
 import cron from "cron";
+
 const CronJob = cron.CronJob;
 
 import moment from "moment";
@@ -68,7 +69,8 @@ function reQueryPendingWalletTopUp(callback) {
             email: data.userdata.meta.accountEmail,
             vendor: data.meta.data.vendor,
             type: TransactionMessagingType.WALLET_TOP_UP,
-            // callbackResponse: data.gateway_response, this is not necessary to return back to the user
+            // callbackResponse: data.gateway_response, this is not necessary to return
+            // back to the user
             walletId: data.destination_wallet_id,
             timeCreated: data.time_created,
           };

@@ -14,6 +14,11 @@
     "heroku-prebuild": "bash preinstall.sh",
     "heroku-postbuild": "bash postinstall.sh"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "git-format-staged -f 'prettier --stdin --stdin-filepath \"{}\"' '*.js' '*.jsx' '*.ts' '*.tsx' '*.css' '*.json' '*.gql'"
+    }
+  },
   "keywords": [
     "node",
     "js"
@@ -42,7 +47,10 @@
     "flow-copy-source": "^2.0.8",
     "mocha": "^6.2.3",
     "sinon": "^7.5.0",
-    "supertest": "^4.0.2"
+    "supertest": "^4.0.2",
+    "husky": "^4.2.5",
+    "lint-staged": "^10.2.11",
+    "git-format-staged": "^2.1.0"
   },
   "dependencies": {
     "async": "^3.2.0",
