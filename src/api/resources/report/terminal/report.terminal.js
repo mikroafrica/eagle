@@ -1,4 +1,5 @@
 import cron from "cron";
+
 const CronJob = cron.CronJob;
 
 import logger from "../../../../logger";
@@ -8,7 +9,7 @@ import {
   previousDayAtNight,
   previousDayInMorning,
 } from "../../commons/model";
-import { PaymentServiceClient, TransactionServiceClient } from '../../../db';
+import { PaymentServiceClient, TransactionServiceClient } from "../../../db";
 import { fileReport } from "../../services/file.service";
 import type { SlackModel } from "../../commons/model";
 

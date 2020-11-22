@@ -1,10 +1,12 @@
 import cron from "cron";
+
 const CronJob = cron.CronJob;
 
 import async from "async";
 import logger from "../../../../logger";
 import moment from "moment";
 import mongodb from "mongodb";
+
 const { ObjectId } = mongodb;
 import {
   convertTimeStampToDate,
@@ -103,9 +105,7 @@ function computeTargetReport() {
                 });
             },
             (err) => {
-              logger.info(
-                `Users transaction info updated`
-              );
+              logger.info(`Users transaction info updated`);
               client.end();
             }
           );

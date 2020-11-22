@@ -35,23 +35,17 @@ ReQueryEmitter.on(RE_QUERY_BILL_EMITTER, function (
       }
 
       /*
-        once retry count is greater than 0, the payment should
-        be reprocessed and count should be set back to 0. once this is done, the
-        transaction is expected to reQuery from 0 to 11 before being reprocessed all over again
-       */
+              once retry count is greater than 0, the payment should
+              be reprocessed and count should be set back to 0. once this is done, the
+              transaction is expected to reQuery from 0 to 11 before being reprocessed all over again
+             */
       let updatedRetryCount = transactionObject.retryCount;
       let updatedReProcessCount = transactionObject.reProcessCount || 0;
 
       updatedRetryCount = updatedRetryCount + 1;
 
-      let vendor = "kMeta";
-      // TODO: remove later
-      if (updatedRetryCount >= 2) {
-        vendor = "vtPass";
-      }
-
       const reQueryModel: ReQueryModel = {
-        vendor: billingModel.vendor || vendor,
+        vendor: billingModel.vendor,
         transactionReference: billingModel.transactionReference,
       };
 

@@ -20,7 +20,7 @@ process.on("uncaughtException", function (err) {
 
 RetryTransferJob().start();
 RetryWalletTopUpJob().start();
-RetryWithdrawalJob().start();
+// RetryWithdrawalJob().start();
 QueryPastHourTransactionJob().start();
 PreviousDayRetentionReportJob().start();
 PreviousDayTerminalReportJob().start();
