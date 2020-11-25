@@ -25,47 +25,25 @@ ReQueryEmitter.on(RE_QUERY_BILL_EMITTER, function (
     async (billingModel, key, callback) => {
       const transactionReference = billingModel.transactionReference;
 
-      // check if transaction reference exist in this
-      let transactionObject = await findByTransactionReference(
-        transactionReference
-      );
-
-      if (!transactionObject) {
-        transactionObject = await saveTransaction(transactionReference);
-      }
-
-      /*
-              once retry count is greater than 0, the payment should
-              be reprocessed and count should be set back to 0. once this is done, the
-              transaction is expected to reQuery from 0 to 11 before being reprocessed all over again
-             */
-      let updatedRetryCount = transactionObject.retryCount;
-      let updatedReProcessCount = transactionObject.reProcessCount || 0;
-
-      updatedRetryCount = updatedRetryCount + 1;
-
       const reQueryModel: ReQueryModel = {
         vendor: billingModel.vendor,
         transactionReference: billingModel.transactionReference,
       };
 
-      // push payment dto to kafka for further processing
+      logger.info(
+        `published bill reQuery Model [${JSON.stringify(reQueryModel)}]`
+      );
+
       try {
+        // push payment dto to kafka for requering
         await publishReQuery(reQueryModel, transactionReference);
       } catch (e) {
         logger.error(
           `::: reQuery bills failed with error [${JSON.stringify(e)}] :::`
         );
+      } finally {
+        callback();
       }
-
-      // update the transaction with its number of retry count
-      await updateByTransactionReference(
-        transactionReference,
-        updatedRetryCount,
-        updatedReProcessCount
-      );
-
-      callback();
     },
     () => {
       if (billingModels.length > 0) {

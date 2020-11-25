@@ -80,7 +80,8 @@ function reQueryPendingBills(callback) {
 
 // run job every three minutes
 export const RetryBillsJob = (): CronJob => {
-  return new CronJob("0 */3 * * * *", function () {
+  // return new CronJob("0 */3 * * * *", function () {
+  return new CronJob("0 */1 * * * *", function () {
     const formattedDate = moment.tz("Africa/Lagos");
     logger.info(`::: reQuery for bills started ${formattedDate} :::`);
 
