@@ -93,8 +93,7 @@ function reQueryPendingWithdrawalWalletTopUp(callback) {
 }
 
 export const RetryWithdrawalJob = (): CronJob => {
-  return new CronJob("* * * * * *", function () {
-    // return new CronJob("0 */2 * * * *", function () {
+  return new CronJob("0 */2 * * * *", function () {
     const formattedDate = moment.tz("Africa/Lagos");
     logger.info(`::: reQuery for withdrawal started ${formattedDate} :::`);
 
