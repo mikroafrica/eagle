@@ -16,6 +16,7 @@ import {
   morning,
   night,
   paymentSuccessfulTransactionStatus,
+  pendingPaymentReversalStatus,
   pendingTransactionStatus,
   TransactionMessagingType,
   TransactionStatus,
@@ -29,15 +30,16 @@ function reQueryPendingWithdrawalWalletTopUp(callback) {
       "SELECT * FROM transactions tnx " +
       "JOIN transaction_statuses status ON status.id = tnx.transaction_status " +
       "JOIN transaction_types type ON type.id = tnx.transaction_type " +
-      "WHERE (status.name = $1 OR status.name = $2 OR status.name = $3) " +
-      "AND type.name = $4 " +
-      "AND tnx.time_updated >= $5 AND tnx.time_updated <= $6 " +
+      "WHERE (status.name = $1 OR status.name = $2 OR status.name = $3 OR status.name = $4) " +
+      "AND type.name = $5 " +
+      "AND tnx.time_updated >= $6 AND tnx.time_updated <= $7 " +
       "ORDER BY tnx.time_created ASC limit 100 ",
 
     values: [
       pendingTransactionStatus,
       paymentSuccessfulTransactionStatus,
       billerPurchaseTransactionStatus,
+      pendingPaymentReversalStatus,
       withdrawalTransactionType,
       morning(),
       night(),

@@ -10,6 +10,7 @@ export const withdrawalTransactionType = "withdrawal";
 export const pendingTransactionStatus = "pending";
 export const paymentSuccessfulTransactionStatus = "payment successful";
 export const billerPurchaseTransactionStatus = "bill purchased failed";
+export const pendingPaymentReversalStatus = "payment reversed pend";
 
 export const morning = () => {
   const fromDate = new Date();
