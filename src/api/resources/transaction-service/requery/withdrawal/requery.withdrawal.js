@@ -58,11 +58,20 @@ function reQueryPendingWithdrawalWalletTopUp(callback) {
       const transactionMessaging: TransactionMessaging = results.map(function (
         data
       ) {
+        let status = TransactionStatus.PENDING;
+        if (data.transaction_status === "5") {
+          status = TransactionStatus.SUCCESS;
+        }
+
+        if (data.transaction_status === "10") {
+          status = TransactionStatus.REVERSAL;
+        }
+
         return {
           paymentReference: data.unique_identifier,
           amount: data.amount,
           vendor: data.vendor,
-          paymentStatus: TransactionStatus.SUCCESS,
+          paymentStatus: status,
           type: TransactionMessagingType.TERMINAL,
           terminalId: data.customer_biller_id,
           // callbackResponse: data.gateway_response, this is not necessary to return
@@ -84,7 +93,8 @@ function reQueryPendingWithdrawalWalletTopUp(callback) {
 }
 
 export const RetryWithdrawalJob = (): CronJob => {
-  return new CronJob("0 */2 * * * *", function () {
+  return new CronJob("* * * * * *", function () {
+    // return new CronJob("0 */2 * * * *", function () {
     const formattedDate = moment.tz("Africa/Lagos");
     logger.info(`::: reQuery for withdrawal started ${formattedDate} :::`);
 
