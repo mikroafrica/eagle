@@ -16,6 +16,7 @@ import {
   morning,
   night,
   paymentSuccessfulTransactionStatus,
+  pendingPaymentReversalStatus,
   pendingTransactionStatus,
   TransactionMessagingType,
   TransactionStatus,
@@ -29,15 +30,15 @@ function reQueryPendingWithdrawalWalletTopUp(callback) {
       "SELECT * FROM transactions tnx " +
       "JOIN transaction_statuses status ON status.id = tnx.transaction_status " +
       "JOIN transaction_types type ON type.id = tnx.transaction_type " +
-      "WHERE (status.name = $1 OR status.name = $2 OR status.name = $3) " +
-      "AND type.name = $4 " +
-      "AND tnx.time_updated >= $5 AND tnx.time_updated <= $6 " +
+      "WHERE (status.name = $1 OR status.name = $2 OR status.name = $3 OR status.name = $4) " +
+      "AND type.name = $5 AND tnx.time_updated >= $6 AND tnx.time_updated <= $7 " +
       "ORDER BY tnx.time_created ASC limit 100 ",
 
     values: [
       pendingTransactionStatus,
       paymentSuccessfulTransactionStatus,
       billerPurchaseTransactionStatus,
+      pendingPaymentReversalStatus,
       withdrawalTransactionType,
       morning(),
       night(),
@@ -57,11 +58,20 @@ function reQueryPendingWithdrawalWalletTopUp(callback) {
       const transactionMessaging: TransactionMessaging = results.map(function (
         data
       ) {
+        let status = TransactionStatus.PENDING;
+        if (data.transaction_status === "5") {
+          status = TransactionStatus.SUCCESS;
+        }
+
+        if (data.transaction_status === "10") {
+          status = TransactionStatus.REVERSAL;
+        }
+
         return {
           paymentReference: data.unique_identifier,
           amount: data.amount,
           vendor: data.vendor,
-          paymentStatus: TransactionStatus.SUCCESS,
+          paymentStatus: status,
           type: TransactionMessagingType.TERMINAL,
           terminalId: data.customer_biller_id,
           // callbackResponse: data.gateway_response, this is not necessary to return
