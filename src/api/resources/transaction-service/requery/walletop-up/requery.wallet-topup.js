@@ -67,7 +67,7 @@ function reQueryPendingWalletTopUp(callback) {
               : "",
             paymentStatus: TransactionStatus.SUCCESS,
             email: data.userdata.meta.accountEmail,
-            vendor: data.meta.data.vendor,
+            vendor: data.vendor || data.meta.data.vendor,
             type: TransactionMessagingType.WALLET_TOP_UP,
             // callbackResponse: data.gateway_response, this is not necessary to return
             // back to the user
