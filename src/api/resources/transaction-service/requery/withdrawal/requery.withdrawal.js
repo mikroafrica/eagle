@@ -32,7 +32,7 @@ function reQueryPendingWithdrawalWalletTopUp(callback) {
       "JOIN transaction_types type ON type.id = tnx.transaction_type " +
       "WHERE (status.name = $1 OR status.name = $2 OR status.name = $3 OR status.name = $4) " +
       "AND type.name = $5 AND tnx.time_updated >= $6 AND tnx.time_updated <= $7 " +
-      "ORDER BY tnx.time_created ASC limit 100 ",
+      "ORDER BY tnx.time_updated ASC limit 100 ",
 
     values: [
       pendingTransactionStatus,
