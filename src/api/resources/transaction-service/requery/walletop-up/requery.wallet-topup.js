@@ -93,7 +93,7 @@ function reQueryPendingWalletTopUp(callback) {
 }
 
 export const RetryWalletTopUpJob = (): CronJob => {
-  return new CronJob("0 */2 * * * *", function () {
+  return new CronJob("0 */4 * * * *", function () {
     const formattedDate = moment.tz("Africa/Lagos");
     logger.info(`::: reQuery for wallet top-up started ${formattedDate} :::`);
 
