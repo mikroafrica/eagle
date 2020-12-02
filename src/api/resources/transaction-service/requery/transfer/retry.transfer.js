@@ -34,7 +34,7 @@ function reQueryPendingTransfer(callback) {
       "WHERE (status.name = $1 OR status.name = $2 OR status.name = $3) " +
       "AND type.name = $4 " +
       "AND tnx.time_created >= $5 AND tnx.time_created <= $6 " +
-      "ORDER BY tnx.time_created ASC limit 40 ",
+      "ORDER BY tnx.time_created ASC limit 60 ",
 
     values: [
       pendingTransactionStatus,
