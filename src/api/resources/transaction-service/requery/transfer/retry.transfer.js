@@ -34,14 +34,15 @@ function reQueryPendingTransfer(callback) {
       "WHERE (status.name = $1 OR status.name = $2 OR status.name = $3) " +
       "AND type.name = $4 " +
       "AND tnx.time_created >= $5 AND tnx.time_created <= $6 " +
-      "ORDER BY tnx.time_created ASC limit 60 ",
+      "ORDER BY tnx.time_created ASC limit 100 ",
 
     values: [
       pendingTransactionStatus,
       paymentSuccessfulTransactionStatus,
       billerPurchaseTransactionStatus,
       transferTransactionType,
-      previousDayInMorning(),
+      // previousDayInMorning(),
+      1607036400000,
       night(),
     ],
   };
