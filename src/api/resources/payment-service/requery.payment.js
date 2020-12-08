@@ -4,7 +4,12 @@ const CronJob = cron.CronJob;
 
 import moment from "moment";
 import logger from "../../../logger";
-import { morning, night, TransactionMessagingType } from "../commons/model";
+import {
+  morning,
+  night,
+  previousDayInMorning,
+  TransactionMessagingType,
+} from "../commons/model";
 import { PaymentServiceClient } from "../../db";
 import type { TransactionMessaging } from "../commons/model";
 import { PAYMENT_EMITTER } from "./requery.payment.event";
@@ -39,7 +44,7 @@ function reQueryPendingWalletTop(callback) {
     values: [
       handShakeStatus,
       TransactionMessagingType.WALLET_TOP_UP,
-      morning(),
+      previousDayInMorning(),
       night(),
     ],
   };
