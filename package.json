@@ -45,12 +45,12 @@
     "eslint-plugin-import": "^2.20.2",
     "flow-bin": "^0.109.0",
     "flow-copy-source": "^2.0.8",
-    "mocha": "^6.2.3",
-    "sinon": "^7.5.0",
-    "supertest": "^4.0.2",
+    "git-format-staged": "^2.1.0",
     "husky": "^4.2.5",
     "lint-staged": "^10.2.11",
-    "git-format-staged": "^2.1.0"
+    "mocha": "^6.2.3",
+    "sinon": "^7.5.0",
+    "supertest": "^4.0.2"
   },
   "dependencies": {
     "async": "^3.2.0",
