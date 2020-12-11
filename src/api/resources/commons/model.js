@@ -62,6 +62,11 @@ export const firstDayOfMonth = () => {
   return moment(`${firstdate} 00:00:00`).tz("Africa/Lagos").format("x");
 };
 
+export const dateFourWeeksAgo = () => {
+  const formattedDate = moment().tz("Africa/Lagos");
+  return formattedDate.subtract(4, "weeks").valueOf();
+}
+
 export type PaymentDto = {
   userId: string,
   amount: number,
