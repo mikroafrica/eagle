@@ -12,6 +12,7 @@ import {
 } from "./api/resources/payment-service/requery.payment";
 import { RetryBillsJob } from "./api/resources/transaction-service/requery/bills";
 import { PreviousDayTargetReportJob } from "./api/resources/report/target";
+import { PreviousMonthWalletStatementReportJob } from  "./api/resources/report/wallet-statement";
 import { TagAgentBasedOnGoalStatusJob } from "./api/resources/report/acquisition-goal";
 
 // handle all uncaught errors
@@ -32,6 +33,7 @@ RetryBillsJob().start();
 
 PreviousDayTargetReportJob().start();
 
+PreviousMonthWalletStatementReportJob().start();
 TagAgentBasedOnGoalStatusJob().start();
 
 const port = process.env.PORT || 9000;

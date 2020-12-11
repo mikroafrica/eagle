@@ -47,11 +47,11 @@ export const get = ({ client, path }) => {
       if (err) {
         reject({
           message: err.message
-            ? err.body.message
-              ? err.body.message
+            ? err.message.body
+              ? err.message.body
               : err.message
             : err,
-          statusCode: res.statusCode || UN_AVAILABLE,
+          statusCode: (res && res.statusCode) || UN_AVAILABLE,
         });
       } else {
         resolve({ data, statusCode: res.statusCode });
