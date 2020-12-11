@@ -12,7 +12,7 @@ import {
 } from "./api/resources/payment-service/requery.payment";
 import { RetryBillsJob } from "./api/resources/transaction-service/requery/bills";
 import { PreviousDayTargetReportJob } from "./api/resources/report/target";
-import { TagAgentBasedOnGoalStatusJob } from "./api/resources/report/acquisition_goal";
+import { TagAgentBasedOnGoalStatusJob } from "./api/resources/report/acquisition-goal";
 
 // handle all uncaught errors
 process.on("uncaughtException", function (err) {
