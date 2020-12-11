@@ -36,15 +36,18 @@ function sendMonthlyWalletStatement(sendMailCallback) {
                 .collection("user-address")
                 .findOne({ userId: user._id.toString() });
 
-              const stores = await dbo
+              const store = await dbo
                 .collection("store")
-                .find({ userId: user._id.toString() })
-                .toArray();
+                .findOne({ userId: user._id.toString() });
 
-              sendMailCallback(stores, address, user);
+              if (store !== null && address !== null) {
+                sendMailCallback(store, address, user);
+              }
             },
             (err) => {
-              logger.info(`Error is ${err}`);
+              logger.info(
+                `This is the end of the user list and Error is ${err}`
+              );
             }
           );
         });
@@ -59,8 +62,8 @@ export const PreviousMonthWalletStatementReportJob = (): CronJob => {
       const formattedDate = moment.tz("Africa/Lagos");
       logger.info(`::: Monthly wallet statement @ ${formattedDate} :::`);
 
-      sendMonthlyWalletStatement(function (stores, address, user) {
-        sendWalletStatement(stores, address, user);
+      sendMonthlyWalletStatement(function (store, address, user) {
+        sendWalletStatement(store, address, user);
       });
     },
     undefined,
@@ -72,9 +75,9 @@ export const PreviousMonthWalletStatementReportJob = (): CronJob => {
 const firstDayOfLastMonthDate = firstDayOfLastMonth();
 const lastDayOfLastMonthDate = lastDayOfLastMonth();
 
-function sendWalletStatement(stores, address, user) {
-  for (let store of stores) {
-    for (let wallet of store.wallet) {
+function sendWalletStatement(store, address, user) {
+  for (let wallet of store.wallet) {
+    if (wallet.type === "MAIN") {
       let data = {
         walletId: wallet._id,
         dateFrom: firstDayOfLastMonthDate.toString(),
@@ -104,9 +107,7 @@ function sendWalletStatement(stores, address, user) {
         generate_wallet_statement(data)
           .then((response) => {
             logger.info(
-              `Generated statement with response ${JSON.stringify(
-                response
-              )} for walletId ${data.walletId}`
+              `Generated statement successfully for walletId ${data.walletId}`
             );
           })
           .catch((err) => {
