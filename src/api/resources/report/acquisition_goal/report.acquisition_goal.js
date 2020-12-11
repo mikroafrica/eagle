@@ -122,10 +122,10 @@ function TagAgentBasedOnGoalStatus() {
   );
 }
 
-// run job at every 1:20 A.M
+// run job at every 1:00 A.M
 export const TagAgentBasedOnGoalStatusJob = (): CronJob => {
   return new CronJob(
-    "0 40 2 * * *",
+    "0 0 1 * * *",
     function () {
       const formattedDate = moment.tz("Africa/Lagos");
       logger.info(`::: Automatic Tagging of agents @ ${formattedDate} :::`);
