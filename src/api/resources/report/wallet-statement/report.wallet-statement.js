@@ -103,10 +103,13 @@ function sendWalletStatement(stores, address, user) {
       if (!validateSchema.error) {
         generate_wallet_statement(data)
           .then((response) => {
-            console.log(response);
+            logger.info(
+              `Generated statement with response ${JSON.stringify(
+                response
+              )} for walletId ${data.walletId}`
+            );
           })
           .catch((err) => {
-            console.log(err);
             logger.error(
               `failed to send monthly report with error ${JSON.stringify(err)}`
             );
