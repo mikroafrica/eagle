@@ -12,7 +12,7 @@ import { firstDayOfLastMonth, lastDayOfLastMonth } from "../../commons/model";
 
 const MongoClient = mongodb.MongoClient;
 
-function computeRetentionReport(sendMailCallback) {
+function sendMonthlyWalletStatement(sendMailCallback) {
   MongoClient.connect(
     process.env.CONSUMER_SERVICE_MONGO_URI,
     {
@@ -57,10 +57,10 @@ export const PreviousMonthWalletStatementReportJob = (): CronJob => {
     "0 0 0 1 * *",
     function () {
       const formattedDate = moment.tz("Africa/Lagos");
-      logger.info(`::: Retention report @ ${formattedDate} :::`);
+      logger.info(`::: Monthly wallet statement @ ${formattedDate} :::`);
 
-      computeRetentionReport(function (stores, address, user) {
-        sendMonthlyWalletReport(stores, address, user);
+      sendMonthlyWalletStatement(function (stores, address, user) {
+        sendWalletStatement(stores, address, user);
       });
     },
     undefined,
@@ -72,7 +72,7 @@ export const PreviousMonthWalletStatementReportJob = (): CronJob => {
 const firstDayOfLastMonthDate = firstDayOfLastMonth();
 const lastDayOfLastMonthDate = lastDayOfLastMonth();
 
-function sendMonthlyWalletReport(stores, address, user) {
+function sendWalletStatement(stores, address, user) {
   for (let store of stores) {
     for (let wallet of store.wallet) {
       let data = {
