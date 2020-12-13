@@ -33,7 +33,7 @@ RetryBillsJob().start();
 
 PreviousDayTargetReportJob().start();
 
-PreviousMonthWalletStatementReportJob().start();
+// PreviousMonthWalletStatementReportJob().start();
 // TagAgentBasedOnGoalStatusJob().start();
 
 const port = process.env.PORT || 9000;
