@@ -62,6 +62,22 @@ export const firstDayOfMonth = () => {
   return moment(`${firstdate} 00:00:00`).tz("Africa/Lagos").format("x");
 };
 
+export const firstDayOfLastMonth = () => {
+  const firstDay = moment().subtract(1, "months").startOf("month").format("YYYY-MM-DD");
+  return moment(`${firstDay} 00:00:00`).tz("Africa/Lagos").format("x");
+}
+
+export const lastDayOfLastMonth = () => {
+  const lastDay = moment().subtract(1, "months").endOf("month").format("YYYY-MM-DD");
+  return moment(`${lastDay} 00:00:00`).tz("Africa/Lagos").format("x");
+
+}
+
+export const dateFourWeeksAgo = () => {
+  const formattedDate = moment().tz("Africa/Lagos");
+  return formattedDate.subtract(4, "weeks").valueOf();
+}
+
 export type PaymentDto = {
   userId: string,
   amount: number,
