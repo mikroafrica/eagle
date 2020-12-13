@@ -13,6 +13,11 @@ import {
 import { RetryBillsJob } from "./api/resources/transaction-service/requery/bills";
 import { PreviousDayTargetReportJob } from "./api/resources/report/target";
 import { TagAgentBasedOnGoalStatusJob } from "./api/resources/report/acquisition-goal";
+import {
+  ActitivityReportDailyJob,
+  ActitivityReportWeeklyJob,
+  ActitivityReportMonthlyJob,
+} from "./api/resources/report/activity-report";
 
 // handle all uncaught errors
 process.on("uncaughtException", function (err) {
@@ -33,6 +38,10 @@ RetryBillsJob().start();
 PreviousDayTargetReportJob().start();
 
 TagAgentBasedOnGoalStatusJob().start();
+
+ActitivityReportDailyJob().start()
+ActitivityReportWeeklyJob().start()
+ActitivityReportMonthlyJob().start()
 
 const port = process.env.PORT || 9000;
 server.listen(port, function () {

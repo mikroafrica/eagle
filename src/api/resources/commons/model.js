@@ -120,6 +120,15 @@ export type SlackModel = {
   message: string,
 };
 
+export type EmailModel = {
+  title: string,
+  body: string,
+  to: string,
+  from: string,
+  fileId: string,
+  mime: string,
+}
+
 export type ReQueryModel = {
   vendor: string,
   transactionReference: string,
