@@ -26,7 +26,7 @@ function sumUpWalletBalance(callback) {
     .then((response) => {
       const results = response.rows;
 
-      logger.info(`The result Wallet balance is [${results}]`);
+      logger.info(`The result Wallet balance is [${JSON.stringify(results)}]`);
 
       if (results.length > 0) {
         const walletBalanceObject = results[0];
@@ -49,9 +49,9 @@ function sumUpWalletBalance(callback) {
     });
 }
 
-// run job at every 5:10 A.M
+// run job at every 5:35 A.M
 export const ReQueryWalletBalance = (): CronJob => {
-  return new CronJob("0 10 5 * * *", function () {
+  return new CronJob("0 35 5 * * *", function () {
     const formattedDate = moment.tz("Africa/Lagos");
     logger.info(`::: reQuery for wallet balance started ${formattedDate} :::`);
 
