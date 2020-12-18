@@ -44,7 +44,7 @@ function reQueryPendingTransfer(callback) {
       billerPurchaseTransactionStatus,
       transferTransactionType,
       previousDayInMorning(),
-      pastThreeMinutes,
+      night(),
     ],
   };
 
