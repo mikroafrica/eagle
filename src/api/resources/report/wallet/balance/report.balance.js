@@ -49,16 +49,24 @@ function sumUpWalletBalance(callback) {
     });
 }
 
-// run job at every 5:35 A.M
+// run job at every 5:50 A.M
 export const ReQueryWalletBalance = (): CronJob => {
-  return new CronJob("0 35 5 * * *", function () {
-    const formattedDate = moment.tz("Africa/Lagos");
-    logger.info(`::: reQuery for wallet balance started ${formattedDate} :::`);
+  return new CronJob(
+    "0 50 5 * * *",
+    function () {
+      const formattedDate = moment.tz("Africa/Lagos");
+      logger.info(
+        `::: reQuery for wallet balance started ${formattedDate} :::`
+      );
 
-    sumUpWalletBalance(function (walletBalance) {
-      pushWalletReportToSlack(walletBalance);
-    });
-  });
+      sumUpWalletBalance(function (walletBalance) {
+        pushWalletReportToSlack(walletBalance);
+      });
+    },
+    undefined,
+    true,
+    "Africa/Lagos"
+  );
 };
 
 function pushWalletReportToSlack(walletBalance) {
