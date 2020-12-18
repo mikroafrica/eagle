@@ -11,6 +11,7 @@ export const pendingTransactionStatus = "pending";
 export const paymentSuccessfulTransactionStatus = "payment successful";
 export const billerPurchaseTransactionStatus = "bill purchased failed";
 export const pendingPaymentReversalStatus = "payment reversed pend";
+export const newPaymentStatus = "new";
 
 export const morning = () => {
   const fromDate = new Date();
@@ -27,6 +28,11 @@ export const night = () => {
 export const pastHour = () => {
   const formattedDate = moment.tz("Africa/Lagos");
   return formattedDate.subtract(1, "hours").valueOf();
+};
+
+export const pastMinutes = (minutes: number) => {
+  const formattedDate = moment.tz("Africa/Lagos");
+  return formattedDate.subtract(minutes, "minutes").valueOf();
 };
 
 export const now = () => {
@@ -63,20 +69,25 @@ export const firstDayOfMonth = () => {
 };
 
 export const firstDayOfLastMonth = () => {
-  const firstDay = moment().subtract(1, "months").startOf("month").format("YYYY-MM-DD");
+  const firstDay = moment()
+    .subtract(1, "months")
+    .startOf("month")
+    .format("YYYY-MM-DD");
   return moment(`${firstDay} 00:00:00`).tz("Africa/Lagos").format("x");
-}
+};
 
 export const lastDayOfLastMonth = () => {
-  const lastDay = moment().subtract(1, "months").endOf("month").format("YYYY-MM-DD");
+  const lastDay = moment()
+    .subtract(1, "months")
+    .endOf("month")
+    .format("YYYY-MM-DD");
   return moment(`${lastDay} 00:00:00`).tz("Africa/Lagos").format("x");
-
-}
+};
 
 export const dateFourWeeksAgo = () => {
   const formattedDate = moment().tz("Africa/Lagos");
   return formattedDate.subtract(4, "weeks").valueOf();
-}
+};
 
 export type PaymentDto = {
   userId: string,
