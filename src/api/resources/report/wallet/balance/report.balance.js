@@ -49,10 +49,10 @@ function sumUpWalletBalance(callback) {
     });
 }
 
-// run job at every 5:50 A.M
+// run job at every 3:30 A.M
 export const ReQueryWalletBalance = (): CronJob => {
   return new CronJob(
-    "0 50 5 * * *",
+    "0 30 3 * * *",
     function () {
       const formattedDate = moment.tz("Africa/Lagos");
       logger.info(
