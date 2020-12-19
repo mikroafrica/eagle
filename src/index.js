@@ -19,6 +19,7 @@ import {
   ActitivityReportWeeklyJob,
   ActitivityReportMonthlyJob,
 } from "./api/resources/report/activity-report";
+import { ReQueryWalletBalance } from "./api/resources/report/wallet/balance";
 
 // handle all uncaught errors
 process.on("uncaughtException", function (err) {
@@ -27,7 +28,7 @@ process.on("uncaughtException", function (err) {
 
 RetryTransferJob().start();
 RetryWalletTopUpJob().start();
-// RetryWithdrawalJob().start();
+RetryWithdrawalJob().start();
 QueryPastHourTransactionJob().start();
 PreviousDayRetentionReportJob().start();
 PreviousDayTerminalReportJob().start();
@@ -37,6 +38,8 @@ RetryPaymentTerminalJob().start();
 RetryBillsJob().start();
 
 PreviousDayTargetReportJob().start();
+
+ReQueryWalletBalance().start();
 
 // PreviousMonthWalletStatementReportJob().start();
 // TagAgentBasedOnGoalStatusJob().start();

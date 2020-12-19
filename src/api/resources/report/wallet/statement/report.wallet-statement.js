@@ -4,11 +4,14 @@ const CronJob = cron.CronJob;
 
 import async, { each } from "async";
 import Joi from "joi";
-import logger from "../../../../logger";
+import logger from "../../../../../logger";
 import moment from "moment";
 import mongodb from "mongodb";
-import { generate_wallet_statement } from "../../services/wallet.service";
-import { firstDayOfLastMonth, lastDayOfLastMonth } from "../../commons/model";
+import { generate_wallet_statement } from "../../../services/wallet.service";
+import {
+  firstDayOfLastMonth,
+  lastDayOfLastMonth,
+} from "../../../commons/model";
 
 const MongoClient = mongodb.MongoClient;
 

@@ -12,6 +12,7 @@ import {
   billerPurchaseTransactionStatus,
   morning,
   night,
+  pastMinutes,
   paymentSuccessfulTransactionStatus,
   pendingTransactionStatus,
   previousDayInMorning,
@@ -25,6 +26,7 @@ export const PaymentType = {
 };
 
 function reQueryPendingTransfer(callback) {
+  const pastThreeMinutes = pastMinutes(3);
   // fetch the first fifteen in ascending order
   const query = {
     text:

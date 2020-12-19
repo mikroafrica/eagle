@@ -11,6 +11,7 @@ export const pendingTransactionStatus = "pending";
 export const paymentSuccessfulTransactionStatus = "payment successful";
 export const billerPurchaseTransactionStatus = "bill purchased failed";
 export const pendingPaymentReversalStatus = "payment reversed pend";
+export const newPaymentStatus = "new";
 
 export const morning = () => {
   const fromDate = new Date();
@@ -27,6 +28,11 @@ export const night = () => {
 export const pastHour = () => {
   const formattedDate = moment.tz("Africa/Lagos");
   return formattedDate.subtract(1, "hours").valueOf();
+};
+
+export const pastMinutes = (minutes: number) => {
+  const formattedDate = moment.tz("Africa/Lagos");
+  return formattedDate.subtract(minutes, "minutes").valueOf();
 };
 
 export const now = () => {
