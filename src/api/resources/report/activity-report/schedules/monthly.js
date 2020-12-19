@@ -4,32 +4,28 @@ const CronJob = cron.CronJob;
 import logger from "../../../../../logger";
 import moment from "moment";
 import {
-  previousDayAtNight,
-  previousDayInMorning,
+  firstDayOfLastMonth,
+  lastDayOfLastMonth,
 } from "../../../commons/model";
-import {
-  uploadFileToFileServiceAndSendToKafka,
-  getActivityReport,
-} from "../report.activity-report";
+import { SendEmailToKafka, getActivityReport } from "../report.activity-report";
 
-const pastDayInMorning = previousDayInMorning();
-const pastDayAtNight = previousDayAtNight();
+const pastDayInMorning = firstDayOfLastMonth();
+const pastDayAtNight = lastDayOfLastMonth();
 const schedule = "month";
 
 export const ActitivityReportMonthlyJob = (): CronJob => {
   return new CronJob(
-    // "0 30 2 * * *",
-    "*/30 * * * * *",
+    "0 0 0 1 * *",
     function () {
       const formattedDate = moment.tz("Africa/Lagos");
-      logger.info(`::: Monthy Activity report @ ${formattedDate} :::`);
+      logger.info(`::: Monthly Activity report @ ${formattedDate} :::`);
 
       getActivityReport(
         pastDayInMorning,
         pastDayAtNight,
         schedule,
         function (data, email) {
-          uploadFileToFileServiceAndSendToKafka(data, email);
+          SendEmailToKafka(data, email);
         }
       );
     },
