@@ -58,7 +58,6 @@
     "dotenv": "^8.2.0",
     "events": "^3.1.0",
     "handlebars": "^4.7.6",
-    "html-pdf": "^2.2.0",
     "joi": "^14.3.1",
     "mikro-kafka-client": "git+ssh://git@bitbucket.org/mikrodevs/mikro-kafka-js.git#master",
     "moment": "^2.27.0",
