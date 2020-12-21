@@ -42,7 +42,7 @@ PreviousDayTargetReportJob().start();
 ReQueryWalletBalance().start();
 
 // PreviousMonthWalletStatementReportJob().start();
-// TagAgentBasedOnGoalStatusJob().start();
+TagAgentBasedOnGoalStatusJob().start();
 
 ActitivityReportDailyJob().start()
 ActitivityReportWeeklyJob().start()
