@@ -1,8 +1,5 @@
 import restify from "restify-clients";
-import request from "request-promise";
-import { OK } from "../../modules/status";
 import { post } from "../commons/request";
-import logger from "../../../logger";
 
 const requestClient = () => {
   const client = restify.createJSONClient({

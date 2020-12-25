@@ -10,7 +10,8 @@ const pastDayInMorning = firstDayOfLastWeek();
 const pastDayAtNight = lastDayOfLastWeek();
 const schedule = "week";
 
-export const ActitivityReportWeeklyJob = (): CronJob => {
+//Generates user's activity report for the past week and sends to email every Monday of the new weekday by 12:00 AM
+export const ActivityReportWeeklyJob = (): CronJob => {
   return new CronJob(
     "0 0 0 * * 1",
     function () {

@@ -1,3 +1,3 @@
-export { ActitivityReportDailyJob } from "./schedules/daily";
-export { ActitivityReportWeeklyJob } from "./schedules/weekly";
-export { ActitivityReportMonthlyJob } from "./schedules/monthly";
+export { ActivityReportDailyJob } from "./schedules/daily";
+export { ActivityReportWeeklyJob } from "./schedules/weekly";
+export { ActivityReportMonthlyJob } from "./schedules/monthly";

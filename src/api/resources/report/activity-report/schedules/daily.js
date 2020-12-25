@@ -13,7 +13,8 @@ const pastDayInMorning = previousDayInMorning();
 const pastDayAtNight = previousDayAtNight();
 const schedule = "day";
 
-export const ActitivityReportDailyJob = (): CronJob => {
+//Generates user's activity report for the past day and sends to email every day by 5:00 AM
+export const ActivityReportDailyJob = (): CronJob => {
   return new CronJob(
     "0 0 5 * * *",
     function () {

@@ -64,7 +64,6 @@
     "mongodb": "^3.5.9",
     "mongoose": "^5.9.17",
     "pg": "^8.2.1",
-    "request-promise": "^4.2.6",
     "restify": "^8.5.1",
     "restify-clients": "^2.5.2",
     "tsscmp": "^1.0.6",

@@ -13,7 +13,8 @@ const pastDayInMorning = firstDayOfLastMonth();
 const pastDayAtNight = lastDayOfLastMonth();
 const schedule = "month";
 
-export const ActitivityReportMonthlyJob = (): CronJob => {
+//Generates user's activity report for the past month and send to email every 1st day of the new month by 12:00 AM
+export const ActivityReportMonthlyJob = (): CronJob => {
   return new CronJob(
     "0 0 0 1 * *",
     function () {

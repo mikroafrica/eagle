@@ -15,9 +15,9 @@ import { PreviousDayTargetReportJob } from "./api/resources/report/target";
 import { PreviousMonthWalletStatementReportJob } from "./api/resources/report/wallet-statement";
 import { TagAgentBasedOnGoalStatusJob } from "./api/resources/report/acquisition-goal";
 import {
-  ActitivityReportDailyJob,
-  ActitivityReportWeeklyJob,
-  ActitivityReportMonthlyJob,
+  ActivityReportDailyJob,
+  ActivityReportWeeklyJob,
+  ActivityReportMonthlyJob,
 } from "./api/resources/report/activity-report";
 import { ReQueryWalletBalance } from "./api/resources/report/wallet/balance";
 
@@ -44,9 +44,9 @@ ReQueryWalletBalance().start();
 // PreviousMonthWalletStatementReportJob().start();
 TagAgentBasedOnGoalStatusJob().start();
 
-ActitivityReportDailyJob().start()
-ActitivityReportWeeklyJob().start()
-ActitivityReportMonthlyJob().start()
+// ActivityReportDailyJob().start();
+// ActivityReportWeeklyJob().start();
+// ActivityReportMonthlyJob().start();
 
 const port = process.env.PORT || 9000;
 server.listen(port, function () {
