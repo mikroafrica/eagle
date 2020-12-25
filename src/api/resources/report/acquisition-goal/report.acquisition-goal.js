@@ -62,7 +62,7 @@ function TagAgentBasedOnGoalStatus() {
                 );
                 let goal = "ACTIVE";
 
-                //Every agent who was onboarded(got terminal mapped) before the 15th of October are automatically successfully
+                //Every agent who was onboarded(got terminal mapped) before the 15th of October are automatically moved successful(Completed)
                 if (
                   dateMapped <
                     moment("10/15/2020 0:00", "M/D/YYYY H:mm").valueOf() ||
