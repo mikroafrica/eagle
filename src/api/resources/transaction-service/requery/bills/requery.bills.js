@@ -19,6 +19,7 @@ import {
   paymentSuccessfulTransactionStatus,
   pendingTransactionStatus,
   phcnTransactionType,
+  previousDayInMorning,
 } from "../../../commons/model";
 import type { BillingModel } from "../../../commons/model";
 
@@ -40,7 +41,7 @@ function reQueryPendingBills(callback) {
       phcnTransactionType,
       cableTransactionType,
       dataTransactionType,
-      morning(),
+      previousDayInMorning(),
       night(),
     ],
   };
