@@ -35,11 +35,11 @@ function handleWalletTopUp(data): TransactionMessaging {
 }
 
 function reQueryPendingWalletTop(callback) {
-  const handShakeStatus = "PUBLISHED_SUCCESSFUL";
+  const handShakeStatus = "PUBLISHED_COMPLETED";
   const query = {
     text:
       "SELECT * FROM transactions tnx " +
-      "WHERE handshake_status = $1 AND tnx.type = $2 " +
+      "WHERE handshake_status != $1 AND tnx.type = $2 " +
       "AND tnx.time_created >= $3 AND tnx.time_created <= $4 ",
 
     values: [
