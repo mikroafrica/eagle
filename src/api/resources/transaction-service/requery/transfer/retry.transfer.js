@@ -62,6 +62,8 @@ function reQueryPendingTransfer(callback) {
         return {
           userId: data.user_id,
           amount: amount,
+          bankCode: data.product,
+          customerName: data.userdata.name,
           remarks: data.userdata.remarks,
           paymentDate: data.time_updated,
           transactionRef: data.transaction_reference,
