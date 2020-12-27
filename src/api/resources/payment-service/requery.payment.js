@@ -7,6 +7,7 @@ import logger from "../../../logger";
 import {
   morning,
   night,
+  pastMinutes,
   previousDayInMorning,
   TransactionMessagingType,
 } from "../commons/model";
@@ -34,11 +35,11 @@ function handleWalletTopUp(data): TransactionMessaging {
 }
 
 function reQueryPendingWalletTop(callback) {
-  const handShakeStatus = "PUBLISHED_SUCCESSFUL";
+  const handShakeStatus = "PUBLISHED_COMPLETED";
   const query = {
     text:
       "SELECT * FROM transactions tnx " +
-      "WHERE handshake_status = $1 AND tnx.type = $2 " +
+      "WHERE handshake_status != $1 AND tnx.type = $2 " +
       "AND tnx.time_created >= $3 AND tnx.time_created <= $4 ",
 
     values: [
@@ -110,7 +111,8 @@ function handleTerminal(data): TransactionMessaging {
 
 function reQueryPendingTerminal(callback) {
   const completedhandShakeStatus = "PUBLISHED_COMPLETED";
-  const initHandShakeStatus = "INIT";
+
+  const pastThreeMinutes = pastMinutes(3);
 
   // fetch first 20 transactions in ascending order
   const query = {
@@ -118,16 +120,15 @@ function reQueryPendingTerminal(callback) {
       "SELECT *, tnx.time_created as tnxDate FROM transactions tnx " +
       "JOIN terminals terminalPro ON " +
       "callback_response -> 'callback_response' ->> 'terminalID' = terminalPro.terminal_id " +
-      "WHERE handshake_status != $1 AND handshake_status != $2 AND tnx.type = $3 " +
-      "AND tnx.time_created >= $4 AND tnx.time_created <= $5 " +
-      "ORDER BY tnx.time_created ASC limit 25",
+      "WHERE handshake_status != $1 AND tnx.type = $2 " +
+      "AND tnx.time_created >= $3 AND tnx.time_created <= $4 " +
+      "ORDER BY tnxDate ASC limit 50",
 
     values: [
-      initHandShakeStatus,
       completedhandShakeStatus,
       TransactionMessagingType.TERMINAL,
-      morning(),
-      night(),
+      previousDayInMorning(),
+      pastThreeMinutes,
     ],
   };
 
@@ -157,7 +158,7 @@ function reQueryPendingTerminal(callback) {
 }
 
 export const RetryPaymentTerminalJob = (): CronJob => {
-  return new CronJob("0 */5 * * * *", function () {
+  return new CronJob("0 */3 * * * *", function () {
     const formattedDate = moment.tz("Africa/Lagos");
     logger.info(`::: re-processing for payment started ${formattedDate} :::`);
 
