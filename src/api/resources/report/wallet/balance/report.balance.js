@@ -15,8 +15,16 @@ import { WalletServiceClient } from "../../../../db";
 function sumUpWalletBalance(callback) {
   const query = {
     text:
-      "SELECT SUM(wallet.balance) AS balance FROM wallets wallet WHERE wallet.wallet_type_id = $1 ",
-    values: [1],
+      "SELECT ROUND(SUM(wallet.balance), 2) AS balance, " +
+      "COUNT(CASE when wallet.wallet_type_id = 1 AND wallet.balance " +
+      "BETWEEN 0 AND 100000 then 1 ELSE NULL END) AS belowHundred, " +
+      "COUNT(CASE WHEN wallet.wallet_type_id = 1 AND wallet.balance " +
+      "BETWEEN 1000001 AND 300000 THEN 1 ELSE NULL END) as belowThreeHundred, " +
+      "COUNT(CASE WHEN wallet.wallet_type_id = 1 AND wallet.balance " +
+      "BETWEEN 3000001 AND 500000 THEN 1 ELSE NULL END) as belowFiveHundred, " +
+      "COUNT(CASE WHEN wallet.wallet_type_id = 1 AND wallet.balance > 500000 THEN 1 ELSE NULL END) AS aboveFiveHundred " +
+      "FROM wallets wallet WHERE wallet.wallet_type_id = 1 ",
+    values: [],
   };
 
   const client = WalletServiceClient();
@@ -29,15 +37,25 @@ function sumUpWalletBalance(callback) {
       logger.info(`The result Wallet balance is [${JSON.stringify(results)}]`);
 
       if (results.length > 0) {
-        const walletBalanceObject = results[0];
-        const walletBalance = walletBalanceObject.balance;
-        const roundBalance = parseFloat(walletBalance).toFixed(2);
+        const walletBalance = results[0].balance;
+        const belowHundredCount = results[0].belowhundred;
+        const belowThreeHundredCount = results[0].belowthreehundred;
+        const belowFiveHundredCount = results[0].belowfivehundred;
+        const aboveFiveHundredCount = results[0].abovefivehundred;
+
+        const ROUNDBalance = parseFloat(walletBalance).toFixed(2);
         const formatter = new Intl.NumberFormat("de-DE", {
           style: "currency",
           currency: "NGN",
         });
 
-        callback(formatter.format(roundBalance));
+        callback(
+          formatter.format(ROUNDBalance),
+          belowHundredCount,
+          belowThreeHundredCount,
+          belowFiveHundredCount,
+          aboveFiveHundredCount
+        );
       }
 
       client.end();
@@ -59,8 +77,20 @@ export const ReQueryWalletBalance = (): CronJob => {
         `::: reQuery for wallet balance started ${formattedDate} :::`
       );
 
-      sumUpWalletBalance(function (walletBalance) {
-        pushWalletReportToSlack(walletBalance);
+      sumUpWalletBalance(function (
+        walletBalance,
+        belowHundredCount,
+        belowThreeHundredCount,
+        belowFiveHundredCount,
+        aboveFiveHundredCount
+      ) {
+        pushWalletReportToSlack(
+          walletBalance,
+          belowHundredCount,
+          belowThreeHundredCount,
+          belowFiveHundredCount,
+          aboveFiveHundredCount
+        );
       });
     },
     undefined,
@@ -69,7 +99,13 @@ export const ReQueryWalletBalance = (): CronJob => {
   );
 };
 
-function pushWalletReportToSlack(walletBalance) {
+function pushWalletReportToSlack(
+  walletBalance,
+  belowHundredCount,
+  belowThreeHundredCount,
+  belowFiveHundredCount,
+  aboveFiveHundredCount
+) {
   const config: KafkaConfig = {
     hostname: process.env.KAFKA_HOST,
     username: process.env.KAFKA_USERNAME,
@@ -82,7 +118,17 @@ function pushWalletReportToSlack(walletBalance) {
   const model: SlackModel = {
     title: `Wallet Balance ReQuery @ [${formattedDate}]`,
     channel: process.env.WALLET_CHANNEL,
-    message: "`Total Wallet Balance: `" + walletBalance,
+    message:
+      "`Total Wallet Balance: `" +
+      walletBalance +
+      "\n`Number of Wallet Balance btw 0 and 100k: `" +
+      belowHundredCount +
+      "\n`Number of Wallet Balance btw 101k and 300k: `" +
+      belowThreeHundredCount +
+      "\n`Number of Wallet Balance btw 301k and 500k: `" +
+      belowFiveHundredCount +
+      "\n`Number of Wallet Balance above 500k: `" +
+      aboveFiveHundredCount,
   };
   mikroProducer(config, JSON.stringify(model), function (err, data) {
     if (err) {
