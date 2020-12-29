@@ -1,7 +1,7 @@
 import restify from "restify-clients";
-import { get, post, put } from "../commons/request";
+import { post } from "../commons/request";
 
-const request = () => {
+const requestClient = () => {
   const client = restify.createJSONClient({
     url: process.env.MEDIA_SERVICE_URL,
     version: "*",
@@ -18,5 +18,5 @@ export const fileReport = ({ params }) => {
   const path = {
     path: "/file",
   };
-  return post({ client: request, path, params });
+  return post({ client: requestClient, path, params });
 };

@@ -84,6 +84,22 @@ export const lastDayOfLastMonth = () => {
   return moment(`${lastDay} 00:00:00`).tz("Africa/Lagos").format("x");
 };
 
+export const firstDayOfLastWeek = () => {
+  const firstDay = moment()
+    .subtract(1, "weeks")
+    .startOf("week")
+    .format("YYYY-MM-DD");
+  return moment(`${firstDay} 00:00:00`).tz("Africa/Lagos").format("x");
+};
+
+export const lastDayOfLastWeek = () => {
+  const lastDay = moment()
+    .subtract(1, "weeks")
+    .endOf("week")
+    .format("YYYY-MM-DD");
+  return moment(`${lastDay} 00:00:00`).tz("Africa/Lagos").format("x");
+};
+
 export const dateFourWeeksAgo = () => {
   const formattedDate = moment().tz("Africa/Lagos");
   return formattedDate.subtract(4, "weeks").valueOf();
@@ -140,6 +156,15 @@ export type SlackModel = {
   title: string,
   channel: string,
   message: string,
+};
+
+export type EmailModel = {
+  title: string,
+  body: string,
+  to: string,
+  from: string,
+  fileId: string,
+  mime: string,
 };
 
 export type ReQueryModel = {

@@ -12,6 +12,13 @@ import {
 } from "./api/resources/payment-service/requery.payment";
 import { RetryBillsJob } from "./api/resources/transaction-service/requery/bills";
 import { PreviousDayTargetReportJob } from "./api/resources/report/target";
+import { PreviousMonthWalletStatementReportJob } from "./api/resources/report/wallet-statement";
+import { TagAgentBasedOnGoalStatusJob } from "./api/resources/report/acquisition-goal";
+import {
+  ActivityReportDailyJob,
+  ActivityReportWeeklyJob,
+  ActivityReportMonthlyJob,
+} from "./api/resources/report/activity-report";
 import { ReQueryWalletBalance } from "./api/resources/report/wallet/balance";
 
 // handle all uncaught errors
@@ -35,7 +42,11 @@ PreviousDayTargetReportJob().start();
 ReQueryWalletBalance().start();
 
 // PreviousMonthWalletStatementReportJob().start();
-// TagAgentBasedOnGoalStatusJob().start();
+TagAgentBasedOnGoalStatusJob().start();
+
+// ActivityReportDailyJob().start();
+// ActivityReportWeeklyJob().start();
+// ActivityReportMonthlyJob().start();
 
 const port = process.env.PORT || 9000;
 server.listen(port, function () {
