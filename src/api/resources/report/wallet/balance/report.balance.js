@@ -17,7 +17,7 @@ function sumUpWalletBalance(callback) {
     text:
       "SELECT ROUND(SUM(wallet.balance), 2) AS balance, " +
       "COUNT(CASE when wallet.wallet_type_id = 1 AND wallet.balance " +
-      "BETWEEN 0 AND 100000 then 1 ELSE NULL END) AS belowHundred, " +
+      "BETWEEN 1 AND 100000 then 1 ELSE NULL END) AS belowHundred, " +
       "COUNT(CASE WHEN wallet.wallet_type_id = 1 AND wallet.balance " +
       "BETWEEN 1000001 AND 300000 THEN 1 ELSE NULL END) as belowThreeHundred, " +
       "COUNT(CASE WHEN wallet.wallet_type_id = 1 AND wallet.balance " +
@@ -67,10 +67,10 @@ function sumUpWalletBalance(callback) {
     });
 }
 
-// run job at every 3:30 A.M
+// run job at every 3:45 A.M
 export const ReQueryWalletBalance = (): CronJob => {
   return new CronJob(
-    "0 30 3 * * *",
+    "0 45 3 * * *",
     function () {
       const formattedDate = moment.tz("Africa/Lagos");
       logger.info(
@@ -121,7 +121,7 @@ function pushWalletReportToSlack(
     message:
       "`Total Wallet Balance: `" +
       walletBalance +
-      "\n`Number of Wallet Balance btw 0 and 100k: `" +
+      "\n`Number of Wallet Balance btw 1 and 100k: `" +
       belowHundredCount +
       "\n`Number of Wallet Balance btw 101k and 300k: `" +
       belowThreeHundredCount +
