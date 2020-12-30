@@ -9,7 +9,7 @@ import mongodb from "mongodb";
 
 const { ObjectId } = mongodb;
 import { dateFourWeeksAgo, now } from "../../commons/model";
-import { TransactionServiceClient, PaymentServiceClient } from "../../../db";
+import { PaymentServiceClient } from "../../../db";
 
 const MongoClient = mongodb.MongoClient;
 
@@ -26,8 +26,6 @@ function TagAgentBasedOnGoalStatus() {
       }
       const dbo = db.db(process.env.CONSUMER_SERVICE_MONGO_DB_NAME);
 
-      const transactionClient = TransactionServiceClient();
-
       const paymentClient = PaymentServiceClient();
 
       const fourWeeksBack = dateFourWeeksAgo();
@@ -42,48 +40,37 @@ function TagAgentBasedOnGoalStatus() {
             async (user, key, callback) => {
               const userId = user._id;
 
-              const terminalQuery = {
-                text: "SELECT * FROM terminals tl " + "WHERE tl.user_id = $1",
-
-                values: [`${userId}`],
-              };
-
-              const terminalResults = await paymentClient.query(terminalQuery);
-
               // compute all user transaction query by user id
-              const query = {
+              const transactionsQuery = {
                 text:
-                  "SELECT SUM(CASE WHEN status.name = 'successful' THEN tnx.amount ELSE 0 END) AS successfulAmount " +
-                  "FROM public.transactions AS tnx JOIN public.transaction_types AS tnxType ON tnx.transaction_type = tnxType.id " +
-                  "JOIN public.transaction_statuses status ON  status.id = tnx.transaction_status " +
-                  "WHERE tnx.time_created >= $1 AND tnx.time_created <= $2 AND tnx.user_id = $3",
-
+                  "SELECT profile.time_updated AS timeMapped, " +
+                  "SUM(CASE WHEN tnx.status = 'SUCCESS' THEN tnx.amount else 0 END) AS successfulAmount " +
+                  "FROM public.transactions AS tnx JOIN public.terminals profile ON profile.terminal_id = tnx.callback_response -> 'callback_response' ->> 'terminalID' " +
+                  "WHERE tnx.type = 'TERMINAL' AND tnx.time_created >= $1 AND tnx.time_created <= $2 AND profile.user_id = $3 " +
+                  "GROUP BY profile.time_updated",
                 values: [`${fourWeeksBack}`, `${currentTime}`, `${userId}`],
               };
 
-              const transactionResults = await transactionClient.query(query);
+              const results = await paymentClient.query(transactionsQuery);
 
-              if (
-                terminalResults.rows.length !== 0 &&
-                transactionResults.rows.length !== 0
-              ) {
+              if (results.rows.length !== 0) {
                 const uniqueUserId = ObjectId(user._id);
-                const terminal = terminalResults.rows[0];
-                const totalTransactionDetails = transactionResults.rows[0];
+                const dateMappedAndAmount = results.rows[0];
+                const dateMapped = dateMappedAndAmount.timemapped;
                 const totalTransactionWithinFourWeeks = parseFloat(
-                  totalTransactionDetails.successfulamount || 0
+                  dateMappedAndAmount.successfulamount || 0
                 );
-
                 let goal = "ACTIVE";
 
+                //Every agent who was onboarded(got terminal mapped) before the 15th of October are automatically moved to successful(Completed)
                 if (
-                  terminal.timeUpdated <
+                  dateMapped <
                     moment("10/15/2020 0:00", "M/D/YYYY H:mm").valueOf() ||
-                  (terminal.timeUpdated >= fourWeeksBack &&
+                  (dateMapped >= fourWeeksBack &&
                     totalTransactionWithinFourWeeks >= 6000000)
                 ) {
                   goal = "COMPLETED";
-                } else if (terminal.timeUpdated < fourWeeksBack) {
+                } else if (dateMapped < fourWeeksBack) {
                   goal = "PENDING";
                 }
 
@@ -113,7 +100,6 @@ function TagAgentBasedOnGoalStatus() {
               logger.info(
                 `Users acquisition status info updated with error = ${err}`
               );
-              transactionClient.end();
               paymentClient.end();
             }
           );

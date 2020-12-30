@@ -114,7 +114,7 @@ function computeTargetReport() {
   );
 }
 
-// run job at every 1:20 A.M
+// run job at every 2:40 A.M
 export const PreviousDayTargetReportJob = (): CronJob => {
   return new CronJob(
     "0 40 2 * * *",
