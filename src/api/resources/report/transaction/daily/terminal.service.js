@@ -112,7 +112,7 @@ function queryTerminalTransaction(callback) {
 // run job every 5: 00 a.m
 export const QueryPastDayTerminalTransactionJob = (): CronJob => {
   return new CronJob(
-    "0 52 5 * * *",
+    "0 56 5 * * *",
     function () {
       const formattedDate = moment.tz("Africa/Lagos");
       logger.info(
