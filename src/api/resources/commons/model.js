@@ -57,7 +57,7 @@ const previousDay = (time: string) => {
 };
 
 export const previousDayInMorning = () => {
-  return previousDay("00:00 AM");
+  return previousDay("10:59 AM");
 };
 
 export const previousDayAtNight = () => {
