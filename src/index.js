@@ -19,6 +19,7 @@ import {
   ActivityReportMonthlyJob,
 } from "./api/resources/report/activity-report";
 import { ReQueryWalletBalance } from "./api/resources/report/wallet/balance";
+import { QueryPastDayTerminalTransactionJob } from "./api/resources/report/transaction/daily/terminal.service";
 
 // handle all uncaught errors
 process.on("uncaughtException", function (err) {
@@ -46,6 +47,8 @@ TagAgentBasedOnGoalStatusJob().start();
 // ActivityReportDailyJob().start();
 // ActivityReportWeeklyJob().start();
 // ActivityReportMonthlyJob().start();
+
+QueryPastDayTerminalTransactionJob().start();
 
 const port = process.env.PORT || 9000;
 server.listen(port, function () {
