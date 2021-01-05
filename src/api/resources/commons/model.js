@@ -57,11 +57,11 @@ const previousDay = (time: string) => {
 };
 
 export const previousDayInMorning = () => {
-  return previousDay("12:00 AM");
+  return previousDay("00:00 AM");
 };
 
 export const previousDayAtNight = () => {
-  return previousDay("11:59 PM");
+  return previousDay("10:59 PM");
 };
 
 export const firstDayOfMonth = () => {
