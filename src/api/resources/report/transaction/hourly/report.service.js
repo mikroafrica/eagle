@@ -102,12 +102,20 @@ function queryPastHourTransactionByName(callback) {
 }
 
 export const QueryPastHourTransactionJob = (): CronJob => {
-  return new CronJob("0 0 */1 * * *", function () {
-    const formattedDate = moment.tz("Africa/Lagos");
-    logger.info(`::: Query past hour transaction started ${formattedDate} :::`);
+  return new CronJob(
+    "0 0 */1 * * *",
+    function () {
+      const formattedDate = moment.tz("Africa/Lagos");
+      logger.info(
+        `::: Query past hour transaction started ${formattedDate} :::`
+      );
 
-    queryPastHourTransactionByName(function (data, time) {
-      transactionSummaryEvent.emit(TRANSACTION_SUMMARY_EMITTER, data, time);
-    });
-  });
+      queryPastHourTransactionByName(function (data, time) {
+        transactionSummaryEvent.emit(TRANSACTION_SUMMARY_EMITTER, data, time);
+      });
+    },
+    undefined,
+    true,
+    "Africa/Lagos"
+  );
 };
