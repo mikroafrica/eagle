@@ -3,6 +3,7 @@ import cron from "cron";
 const CronJob = cron.CronJob;
 
 import {
+  convertTimeStampToDate,
   convertTimeStampToTime,
   previousDayAtNight,
   previousDayInMorning,
@@ -17,6 +18,7 @@ import terminalTransactionSummaryEvent, {
 
 function queryTerminalTransaction(callback) {
   const previousMorning = previousDayInMorning();
+  console.log(previousMorning);
   const previousNight = previousDayAtNight();
 
   const query = {
@@ -32,9 +34,11 @@ function queryTerminalTransaction(callback) {
     values: [previousMorning, previousNight],
   };
 
-  const friendlyTime = `${convertTimeStampToTime(
+  const friendlyTime = `${convertTimeStampToDate(
     previousMorning
-  )} -- ${convertTimeStampToTime(previousNight)}`;
+  )} ${convertTimeStampToTime(previousMorning)} -- ${convertTimeStampToDate(
+    previousNight
+  )} ${convertTimeStampToTime(previousNight)}`;
 
   const paymentServiceClient = PaymentServiceClient();
 
@@ -108,7 +112,7 @@ function queryTerminalTransaction(callback) {
 // run job every 5: 00 a.m
 export const QueryPastDayTerminalTransactionJob = (): CronJob => {
   return new CronJob(
-    "0 0 5 * * *",
+    "0 0 6 * * *",
     function () {
       const formattedDate = moment.tz("Africa/Lagos");
       logger.info(

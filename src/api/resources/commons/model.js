@@ -1,10 +1,12 @@
 import moment from "moment";
+import "moment-timezone";
 
 export const phcnTransactionType = "phcn";
 export const cableTransactionType = "cable_tv";
 export const airtimeTransactionType = "airtime";
 export const dataTransactionType = "data";
 export const transferTransactionType = "transfer";
+export const payoutTransactionType = "payout";
 export const walletTopUpTransactionType = "wallet_top_up";
 export const withdrawalTransactionType = "withdrawal";
 export const pendingTransactionStatus = "pending";
@@ -56,11 +58,11 @@ const previousDay = (time: string) => {
 };
 
 export const previousDayInMorning = () => {
-  return previousDay("12:00 AM");
+  return previousDay("00:00 AM");
 };
 
 export const previousDayAtNight = () => {
-  return previousDay("11:59 PM");
+  return previousDay("10:59 PM");
 };
 
 export const firstDayOfMonth = () => {

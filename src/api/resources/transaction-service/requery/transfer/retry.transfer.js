@@ -14,6 +14,7 @@ import {
   night,
   pastMinutes,
   paymentSuccessfulTransactionStatus,
+  payoutTransactionType,
   pendingTransactionStatus,
   previousDayInMorning,
   transferTransactionType,
@@ -34,8 +35,8 @@ function reQueryPendingTransfer(callback) {
       "JOIN transaction_statuses status ON status.id = tnx.transaction_status " +
       "JOIN transaction_types type ON type.id = tnx.transaction_type " +
       "WHERE (status.name = $1 OR status.name = $2 OR status.name = $3) " +
-      "AND type.name = $4 " +
-      "AND tnx.time_created >= $5 AND tnx.time_created <= $6 " +
+      "AND (type.name = $4 OR type.name = $5) " +
+      "AND tnx.time_created >= $6 AND tnx.time_created <= $7 " +
       "ORDER BY tnx.time_created ASC limit 100 ",
 
     values: [
@@ -43,6 +44,7 @@ function reQueryPendingTransfer(callback) {
       paymentSuccessfulTransactionStatus,
       billerPurchaseTransactionStatus,
       transferTransactionType,
+      payoutTransactionType,
       previousDayInMorning(),
       night(),
     ],
