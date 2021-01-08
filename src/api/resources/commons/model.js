@@ -6,6 +6,7 @@ export const cableTransactionType = "cable_tv";
 export const airtimeTransactionType = "airtime";
 export const dataTransactionType = "data";
 export const transferTransactionType = "transfer";
+export const payoutTransactionType = "payout";
 export const walletTopUpTransactionType = "wallet_top_up";
 export const withdrawalTransactionType = "withdrawal";
 export const pendingTransactionStatus = "pending";
