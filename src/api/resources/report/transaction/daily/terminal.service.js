@@ -21,8 +21,6 @@ function queryTerminalTransaction(callback) {
   const previousMorning = previousDayInMorning();
   const previousNight = previousDayAtNight();
 
-  console.log(yesterday());
-
   const query = {
     text:
       "select sum(case when tnx.status = 'SUCCESS' THEN tnx.amount ELSE 0 END) as success, " +
@@ -31,7 +29,7 @@ function queryTerminalTransaction(callback) {
       "sum(case when tnx.status = 'FAILED_REVERSAL' THEN tnx.amount ELSE 0 END) as failedRev, " +
       " term.vendor, term.bank from transactions tnx " +
       "join terminals term  on term.terminal_id = tnx.customer_biller_id " +
-      "where type = 'TERMINAL' and tnx.time_created between $1 and $2  group by term.vendor, term.bank",
+      "where type = 'TERMINAL' and tnx.time_created <= $1 and tnx.time_created < $2  group by term.vendor, term.bank",
 
     values: [previousMorning, previousNight],
   };

@@ -41,18 +41,6 @@ export const now = () => {
   return formattedDate.valueOf();
 };
 
-export const yesterday = () => {
-  const now = moment.tz("Africa/Lagos");
-  const startDayOfDay = now.startOf("day").valueOf();
-
-  const startOfYesterday = startDayOfDay - 24 * 3600;
-
-  const endOfYesterday = startDayOfDay;
-
-  console.log(startOfYesterday);
-  console.log(endOfYesterday);
-};
-
 export const convertTimeStampToTime = (timestamp: number) => {
   const formattedDate = moment(timestamp, "x").tz("Africa/Lagos");
   return formattedDate.format("HH:mm");
@@ -63,17 +51,21 @@ export const convertTimeStampToDate = (timestamp: number) => {
   return formattedDate.format("DD-MMMM-YYYY");
 };
 
-const previousDay = (time: string) => {
-  const formattedDate = moment(time, ["h:mm A"]).tz("Africa/Lagos");
-  return formattedDate.subtract(-1, "days").valueOf();
-};
-
 export const previousDayInMorning = () => {
-  return previousDay("00:00 AM");
+  const now = moment.tz("Africa/Lagos");
+  const startDayOfDay = now.startOf("day").valueOf();
+
+  // 24 hours ago of the start of today
+  return startDayOfDay - 24 * 3600 * 1000;
 };
 
+/**
+ * please note: this returns 12:00 a.m of the current day. < should be used in comparison
+ * @returns {number}
+ */
 export const previousDayAtNight = () => {
-  return previousDay("11:59 PM");
+  const now = moment.tz("Africa/Lagos");
+  return now.startOf("day").valueOf();
 };
 
 export const firstDayOfMonth = () => {
