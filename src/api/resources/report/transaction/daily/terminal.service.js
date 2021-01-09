@@ -50,8 +50,12 @@ function queryTerminalTransaction(callback) {
       );
 
       let modifiedValue = "";
+      let totalExpectedCredit = 0;
+      const formatter = new Intl.NumberFormat();
 
       results.forEach(function (result) {
+        totalExpectedCredit += parseFloat(result.success || 0);
+
         modifiedValue +=
           "`Transaction for PTSP (" +
           result.vendor +
@@ -60,16 +64,16 @@ function queryTerminalTransaction(callback) {
           result.bank +
           ")`" +
           " ```success: " +
-          result.success +
+          formatter.format(result.success || 0) +
           " \n" +
           "Failed: " +
-          result.failed +
+          formatter.format(result.failed || 0) +
           " \n" +
           "Reversal: " +
-          result.reversal +
+          formatter.format(result.reversal || 0) +
           " \n" +
           "Failed Reversal: " +
-          result.failedrev +
+          formatter.format(result.failedrev) +
           " ``` ";
       });
 
@@ -88,10 +92,15 @@ function queryTerminalTransaction(callback) {
           `Total number of queried transaction summary is [${results.length}]`
         );
 
+        modifiedValue +=
+          "`Expected Wallet Credit` ``` " +
+          formatter.format(parseFloat(totalExpectedCredit).toFixed(2)) +
+          " ```\n";
+
         if (tnxResult.length > 0) {
           const success = tnxResult[0].success;
-
-          modifiedValue += "`Wallet Credit` ``` " + success + " ```";
+          modifiedValue +=
+            "`Wallet Credit` ``` " + formatter.format(success) + " ```";
         }
 
         callback(modifiedValue, friendlyTime);
@@ -111,8 +120,8 @@ function queryTerminalTransaction(callback) {
 // run job every 1:00 a.m
 export const QueryPastDayTerminalTransactionJob = (): CronJob => {
   return new CronJob(
+    "0 50 6 * * *",
     // "0 0 1 * * *",
-    "0 23 6 * * *",
     function () {
       const formattedDate = moment.tz("Africa/Lagos");
       logger.info(
