@@ -100,7 +100,7 @@ export function getActivityReport(
                   "SUM(CASE WHEN status.name = 'successful' THEN tnx.mikro_commission else 0 END) AS mikroAmount " +
                   "FROM public.transactions AS tnx JOIN public.transaction_types AS tnxType ON tnx.transaction_type = tnxType.id " +
                   "JOIN public.transaction_statuses status ON status.id = tnx.transaction_status " +
-                  "WHERE tnx.time_created >= $1 AND tnx.time_created <= $2 AND tnx.user_id = $3 " +
+                  "WHERE tnx.time_created >= $1 AND tnx.time_created < $2 AND tnx.user_id = $3 " +
                   "GROUP BY tnxType.name",
 
                 values: [dateFrom, dateTo, `${userId}`],

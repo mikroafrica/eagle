@@ -1,5 +1,4 @@
 import moment from "moment";
-import "moment-timezone";
 
 export const phcnTransactionType = "phcn";
 export const cableTransactionType = "cable_tv";
@@ -52,17 +51,21 @@ export const convertTimeStampToDate = (timestamp: number) => {
   return formattedDate.format("DD-MMMM-YYYY");
 };
 
-const previousDay = (time: string) => {
-  const formattedDate = moment(time, ["h:mm A"]).tz("Africa/Lagos");
-  return formattedDate.subtract(1, "days").valueOf();
-};
-
 export const previousDayInMorning = () => {
-  return previousDay("00:00 AM");
+  const now = moment.tz("Africa/Lagos");
+  const startDayOfDay = now.startOf("day").valueOf();
+
+  // 24 hours ago of the start of today
+  return startDayOfDay - 24 * 3600 * 1000;
 };
 
+/**
+ * please note: this returns 12:00 a.m of the current day. < should be used in comparison
+ * @returns {number}
+ */
 export const previousDayAtNight = () => {
-  return previousDay("10:59 PM");
+  const now = moment.tz("Africa/Lagos");
+  return now.startOf("day").valueOf();
 };
 
 export const firstDayOfMonth = () => {

@@ -33,7 +33,7 @@ function computeTerminalReport(callback) {
       "COUNT(CASE WHEN tnx.status = 'SUCCESS' THEN 1 else NULL END) AS successful ," +
       "COUNT(CASE WHEN tnx.status != 'SUCCESS' THEN 1 else NULL END) AS failed " +
       "FROM public.transactions AS tnx JOIN public.terminals profile ON  profile.terminal_id = tnx.callback_response -> 'callback_response' ->> 'terminalID' " +
-      "WHERE tnx.type = 'TERMINAL' AND tnx.time_created >= $1 AND tnx.time_created <= $2" +
+      "WHERE tnx.type = 'TERMINAL' AND tnx.time_created >= $1 AND tnx.time_created < $2" +
       " GROUP BY terminalID, profile.phone_number, profile.name",
 
     values: [pastDayInMorning, pastDayAtNight],
