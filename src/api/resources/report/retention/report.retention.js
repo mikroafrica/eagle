@@ -74,7 +74,7 @@ function computeRetentionReport(reportCallback) {
                   " or status.name = 'pending' THEN 1 else NULL END) AS pending " +
                   "FROM public.transactions AS tnx JOIN public.transaction_types AS tnxType ON tnx.transaction_type = tnxType.id " +
                   "JOIN public.transaction_statuses status ON  status.id = tnx.transaction_status " +
-                  "WHERE tnx.time_created >= $1 AND tnx.time_created <= $2 AND tnx.user_id = $3",
+                  "WHERE tnx.time_created >= $1 AND tnx.time_created < $2 AND tnx.user_id = $3",
 
                 values: [pastDayInMorning, pastDayAtNight, `${userId}`],
               };
