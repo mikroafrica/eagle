@@ -53,7 +53,7 @@ export const convertTimeStampToDate = (timestamp: number) => {
 
 const previousDay = (time: string) => {
   const formattedDate = moment(time, ["h:mm A"]).tz("Africa/Lagos");
-  return formattedDate.subtract(1, "days").valueOf();
+  return formattedDate.subtract(-1, "days").valueOf();
 };
 
 export const previousDayInMorning = () => {
