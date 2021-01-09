@@ -26,23 +26,23 @@ process.on("uncaughtException", function (err) {
   logger.error(`uncaught error has been fired with Error: ${err}`);
 });
 
-RetryTransferJob().start();
-RetryWalletTopUpJob().start();
-RetryWithdrawalJob().start();
-QueryPastHourTransactionJob().start();
-PreviousDayRetentionReportJob().start();
-PreviousDayTerminalReportJob().start();
-
-RetryPaymentWalletTopUpJob().start();
-RetryPaymentTerminalJob().start();
-RetryBillsJob().start();
-
-PreviousDayTargetReportJob().start();
-
-ReQueryWalletBalance().start();
+// RetryTransferJob().start();
+// RetryWalletTopUpJob().start();
+// RetryWithdrawalJob().start();
+// QueryPastHourTransactionJob().start();
+// PreviousDayRetentionReportJob().start();
+// PreviousDayTerminalReportJob().start();
+//
+// RetryPaymentWalletTopUpJob().start();
+// RetryPaymentTerminalJob().start();
+// RetryBillsJob().start();
+//
+// PreviousDayTargetReportJob().start();
+//
+// ReQueryWalletBalance().start();
 
 // PreviousMonthWalletStatementReportJob().start();
-TagAgentBasedOnGoalStatusJob().start();
+// TagAgentBasedOnGoalStatusJob().start();
 
 // ActivityReportDailyJob().start();
 // ActivityReportWeeklyJob().start();

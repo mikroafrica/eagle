@@ -1,5 +1,4 @@
 import moment from "moment";
-import "moment-timezone";
 
 export const phcnTransactionType = "phcn";
 export const cableTransactionType = "cable_tv";
@@ -62,7 +61,7 @@ export const previousDayInMorning = () => {
 };
 
 export const previousDayAtNight = () => {
-  return previousDay("10:59 PM");
+  return previousDay("11:59 PM");
 };
 
 export const firstDayOfMonth = () => {

@@ -61,7 +61,6 @@
     "joi": "^14.3.1",
     "mikro-kafka-client": "git+ssh://git@bitbucket.org/mikrodevs/mikro-kafka-js.git#master",
     "moment": "^2.27.0",
-    "moment-timezone": "^0.5.32",
     "mongodb": "^3.5.9",
     "mongoose": "^5.9.17",
     "pg": "^8.2.1",

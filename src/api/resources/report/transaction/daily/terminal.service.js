@@ -18,7 +18,6 @@ import terminalTransactionSummaryEvent, {
 
 function queryTerminalTransaction(callback) {
   const previousMorning = previousDayInMorning();
-  console.log(previousMorning);
   const previousNight = previousDayAtNight();
 
   const query = {
@@ -34,11 +33,16 @@ function queryTerminalTransaction(callback) {
     values: [previousMorning, previousNight],
   };
 
+  console.log(previousMorning);
+  console.log(previousNight);
+
   const friendlyTime = `${convertTimeStampToDate(
     previousMorning
   )} ${convertTimeStampToTime(previousMorning)} -- ${convertTimeStampToDate(
     previousNight
   )} ${convertTimeStampToTime(previousNight)}`;
+
+  console.log(friendlyTime);
 
   const paymentServiceClient = PaymentServiceClient();
 
@@ -112,7 +116,9 @@ function queryTerminalTransaction(callback) {
 // run job every 5: 00 a.m
 export const QueryPastDayTerminalTransactionJob = (): CronJob => {
   return new CronJob(
-    "0 0 6 * * *",
+    // "* * * * * *",
+    "0 */2 * * * *",
+    // "0 0 6 * * *",
     function () {
       const formattedDate = moment.tz("Africa/Lagos");
       logger.info(
