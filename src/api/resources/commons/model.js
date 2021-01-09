@@ -41,6 +41,18 @@ export const now = () => {
   return formattedDate.valueOf();
 };
 
+export const yesterday = () => {
+  const now = moment.tz("Africa/Lagos");
+  const startDayOfDay = now.startOf("day").valueOf();
+
+  const startOfYesterday = startDayOfDay - 24 * 3600;
+
+  const endOfYesterday = startDayOfDay;
+
+  console.log(startOfYesterday);
+  console.log(endOfYesterday);
+};
+
 export const convertTimeStampToTime = (timestamp: number) => {
   const formattedDate = moment(timestamp, "x").tz("Africa/Lagos");
   return formattedDate.format("HH:mm");

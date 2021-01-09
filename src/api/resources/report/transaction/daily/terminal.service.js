@@ -7,6 +7,7 @@ import {
   convertTimeStampToTime,
   previousDayAtNight,
   previousDayInMorning,
+  yesterday,
 } from "../../../commons/model";
 import { PaymentServiceClient, TransactionServiceClient } from "../../../../db";
 import logger from "../../../../../logger";
@@ -19,6 +20,8 @@ import terminalTransactionSummaryEvent, {
 function queryTerminalTransaction(callback) {
   const previousMorning = previousDayInMorning();
   const previousNight = previousDayAtNight();
+
+  console.log(yesterday());
 
   const query = {
     text:
