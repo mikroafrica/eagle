@@ -40,7 +40,7 @@ function reQueryPendingWalletTop(callback) {
     text:
       "SELECT * FROM transactions tnx " +
       "WHERE handshake_status != $1 AND tnx.type = $2 " +
-      "AND tnx.time_created >= $3 AND tnx.time_created <= $4 ",
+      "AND tnx.time_updated >= $3 AND tnx.time_updated <= $4 ",
 
     values: [
       handShakeStatus,
