@@ -157,20 +157,6 @@ export const TransactionStatus = {
   UNKNOWN: "UNKOWN",
 };
 
-export type SlackModel = {
-  title: string,
-  channel: string,
-  message: string,
-};
-
-export type EmailModel = {
-  title: string,
-  body: string,
-  to: string,
-  from: string,
-  fileId: string,
-  mime: string,
-};
 
 export type ReQueryModel = {
   vendor: string,

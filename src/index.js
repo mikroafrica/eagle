@@ -3,23 +3,11 @@ import server from "./server";
 import { RetryTransferJob } from "./api/resources/transaction-service/requery/transfer";
 import { RetryWalletTopUpJob } from "./api/resources/transaction-service/requery/walletop-up";
 import { RetryWithdrawalJob } from "./api/resources/transaction-service/requery/withdrawal/requery.withdrawal";
-import { QueryPastHourTransactionJob } from "./api/resources/report/transaction/hourly/report.service";
-import { PreviousDayRetentionReportJob } from "./api/resources/report/retention";
-import { PreviousDayTerminalReportJob } from "./api/resources/report/terminal";
 import {
   RetryPaymentTerminalJob,
   RetryPaymentWalletTopUpJob,
 } from "./api/resources/payment-service/requery.payment";
 import { RetryBillsJob } from "./api/resources/transaction-service/requery/bills";
-import { PreviousDayTargetReportJob } from "./api/resources/report/target";
-import { TagAgentBasedOnGoalStatusJob } from "./api/resources/report/acquisition-goal";
-import {
-  ActivityReportDailyJob,
-  ActivityReportWeeklyJob,
-  ActivityReportMonthlyJob,
-} from "./api/resources/report/activity-report";
-import { ReQueryWalletBalance } from "./api/resources/report/wallet/balance";
-import { QueryPastDayTerminalTransactionJob } from "./api/resources/report/transaction/daily/terminal.service";
 
 // handle all uncaught errors
 process.on("uncaughtException", function (err) {
@@ -29,26 +17,10 @@ process.on("uncaughtException", function (err) {
 RetryTransferJob().start();
 RetryWalletTopUpJob().start();
 RetryWithdrawalJob().start();
-QueryPastHourTransactionJob().start();
-PreviousDayRetentionReportJob().start();
-PreviousDayTerminalReportJob().start();
 
 RetryPaymentWalletTopUpJob().start();
 RetryPaymentTerminalJob().start();
 RetryBillsJob().start();
-
-PreviousDayTargetReportJob().start();
-
-ReQueryWalletBalance().start();
-
-// PreviousMonthWalletStatementReportJob().start();
-TagAgentBasedOnGoalStatusJob().start();
-
-// ActivityReportDailyJob().start();
-// ActivityReportWeeklyJob().start();
-// ActivityReportMonthlyJob().start();
-
-QueryPastDayTerminalTransactionJob().start();
 
 const port = process.env.PORT || 9000;
 server.listen(port, function () {
