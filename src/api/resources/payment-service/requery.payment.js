@@ -119,7 +119,7 @@ function reQueryPendingTerminal(callback) {
     text:
       "SELECT *, tnx.time_created as tnxDate FROM transactions tnx " +
       "JOIN terminals terminalPro ON " +
-      "callback_response -> 'callback_response' ->> 'terminalID' = terminalPro.terminal_id " +
+      "customer_biller_id = terminalPro.terminal_id " +
       "WHERE handshake_status != $1 AND tnx.type = $2 " +
       "AND tnx.time_created >= $3 AND tnx.time_created <= $4 " +
       "ORDER BY tnxDate ASC limit 50",
@@ -127,7 +127,8 @@ function reQueryPendingTerminal(callback) {
     values: [
       completedhandShakeStatus,
       TransactionMessagingType.TERMINAL,
-      previousDayInMorning(),
+      1610924400000,
+      // previousDayInMorning(),
       pastThreeMinutes,
     ],
   };
