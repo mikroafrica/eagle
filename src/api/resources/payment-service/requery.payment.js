@@ -127,7 +127,8 @@ function reQueryPendingTerminal(callback) {
     values: [
       completedhandShakeStatus,
       TransactionMessagingType.TERMINAL,
-      previousDayInMorning(),
+      1610924400000,
+      // previousDayInMorning(),
       pastThreeMinutes,
     ],
   };
