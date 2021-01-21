@@ -100,7 +100,7 @@ function handleTerminal(data): TransactionMessaging {
     amount: data.amount,
     paymentStatus: data.status,
     userId: data.user_id,
-    terminalId: data.terminal_id,
+    terminalId: data.customer_biller_id,
     walletId: data.wallet_id,
     vendor: data.vendor,
     type: data.type,
@@ -119,7 +119,7 @@ function reQueryPendingTerminal(callback) {
     text:
       "SELECT *, tnx.time_created as tnxDate FROM transactions tnx " +
       "JOIN terminals terminalPro ON " +
-      "customer_biller_id = terminalPro.terminal_id " +
+      "tnx.customer_biller_id = terminalPro.terminal_id " +
       "WHERE handshake_status != $1 AND tnx.type = $2 " +
       "AND tnx.time_created >= $3 AND tnx.time_created <= $4 " +
       "ORDER BY tnxDate ASC limit 50",
@@ -127,8 +127,7 @@ function reQueryPendingTerminal(callback) {
     values: [
       completedhandShakeStatus,
       TransactionMessagingType.TERMINAL,
-      1610924400000,
-      // previousDayInMorning(),
+      previousDayInMorning(),
       pastThreeMinutes,
     ],
   };
