@@ -4,3 +4,5 @@ node_modules
 .env
 *lock*
 **/.DS_Store
+rescue.js
+rescue-value.js
