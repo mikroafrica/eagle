@@ -122,7 +122,7 @@ function reQueryPendingTerminal(callback) {
       "tnx.customer_biller_id = terminalPro.terminal_id " +
       "WHERE handshake_status != $1 AND tnx.type = $2 " +
       "AND tnx.time_created >= $3 AND tnx.time_created <= $4 " +
-      "ORDER BY tnxDate ASC limit 70",
+      "ORDER BY tnxDate DESC limit 70",
 
     values: [
       completedhandShakeStatus,
