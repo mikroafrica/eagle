@@ -18,6 +18,7 @@ import {
   paymentSuccessfulTransactionStatus,
   pendingPaymentReversalStatus,
   pendingTransactionStatus,
+  previousDayInMorning,
   TransactionMessagingType,
   TransactionStatus,
   withdrawalTransactionType,
@@ -40,7 +41,7 @@ function reQueryPendingWithdrawalWalletTopUp(callback) {
       billerPurchaseTransactionStatus,
       pendingPaymentReversalStatus,
       withdrawalTransactionType,
-      morning(),
+      previousDayInMorning(),
       night(),
     ],
   };
