@@ -70,7 +70,7 @@ function sumUpWalletBalance(callback) {
 // run job at every 5:00 A.M
 export const ReQueryWalletBalance = (): CronJob => {
   return new CronJob(
-    "0 50 7 * * *",
+    "0 30 6 * * *",
     function () {
       const formattedDate = moment.tz("Africa/Lagos");
       logger.info(
