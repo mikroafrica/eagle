@@ -22,7 +22,7 @@ function handleWalletTopUp(data): TransactionMessaging {
     paymentReference: data.payment_reference,
     amount: data.amount,
     paymentStatus: data.status,
-    email: callbackResponse.customer.email,
+    email: callbackResponse.customer ? callbackResponse.customer.email : "",
     // vendor fucked us up, we had to justapox
     accountNumber: data.customer_biller_id,
     vendor: data.vendor,
