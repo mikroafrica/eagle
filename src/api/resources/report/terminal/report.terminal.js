@@ -62,7 +62,7 @@ function computeTerminalReport(callback) {
 // run job at every 1:45 A.M
 export const PreviousDayTerminalReportJob = (): CronJob => {
   return new CronJob(
-    "0 45 1 * * *",
+    "0 15 1 * * *",
     function () {
       const formattedDate = moment.tz("Africa/Lagos");
       logger.info(`::: Terminal report @ ${formattedDate} :::`);
