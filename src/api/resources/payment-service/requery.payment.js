@@ -22,11 +22,9 @@ function handleWalletTopUp(data): TransactionMessaging {
     paymentReference: data.payment_reference,
     amount: data.amount,
     paymentStatus: data.status,
-    email: callbackResponse.customer.email,
+    email: callbackResponse.customer ? callbackResponse.customer.email : "",
     // vendor fucked us up, we had to justapox
-    accountNumber: callbackResponse.accountDetails
-      ? callbackResponse.accountDetails.accountNumber
-      : "",
+    accountNumber: data.customer_biller_id,
     vendor: data.vendor,
     type: data.type,
     callbackResponse: data.callback_response,
@@ -100,7 +98,7 @@ function handleTerminal(data): TransactionMessaging {
     amount: data.amount,
     paymentStatus: data.status,
     userId: data.user_id,
-    terminalId: data.terminal_id,
+    terminalId: data.customer_biller_id,
     walletId: data.wallet_id,
     vendor: data.vendor,
     type: data.type,
@@ -119,10 +117,10 @@ function reQueryPendingTerminal(callback) {
     text:
       "SELECT *, tnx.time_created as tnxDate FROM transactions tnx " +
       "JOIN terminals terminalPro ON " +
-      "callback_response -> 'callback_response' ->> 'terminalID' = terminalPro.terminal_id " +
+      "tnx.customer_biller_id = terminalPro.terminal_id " +
       "WHERE handshake_status != $1 AND tnx.type = $2 " +
       "AND tnx.time_created >= $3 AND tnx.time_created <= $4 " +
-      "ORDER BY tnxDate ASC limit 50",
+      "ORDER BY tnxDate DESC limit 70",
 
     values: [
       completedhandShakeStatus,
@@ -158,7 +156,7 @@ function reQueryPendingTerminal(callback) {
 }
 
 export const RetryPaymentTerminalJob = (): CronJob => {
-  return new CronJob("0 */3 * * * *", function () {
+  return new CronJob("0 */2 * * * *", function () {
     const formattedDate = moment.tz("Africa/Lagos");
     logger.info(`::: re-processing for payment started ${formattedDate} :::`);
 
