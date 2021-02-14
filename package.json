@@ -10,9 +10,7 @@
     "build:lib": "babel src/ -d lib/",
     "build:flow": "flow-copy-source -v src/ lib/",
     "postinstall": "npm run build",
-    "start": "node lib/index.js",
-    "heroku-prebuild": "bash preinstall.sh",
-    "heroku-postbuild": "bash postinstall.sh"
+    "start": "node lib/index.js"
   },
   "husky": {
     "hooks": {
@@ -59,7 +57,7 @@
     "events": "^3.1.0",
     "handlebars": "^4.7.6",
     "joi": "^14.3.1",
-    "mikro-kafka-client": "git+ssh://git@bitbucket.org/mikrodevs/mikro-kafka-js.git#master",
+    "mikro-kafka-client": "https://github.com/meshboy/kafka-wrapper.git#master",
     "moment": "^2.27.0",
     "mongodb": "^3.5.9",
     "mongoose": "^5.9.17",
