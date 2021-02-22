@@ -22,7 +22,7 @@ RetryPaymentWalletTopUpJob().start();
 RetryPaymentTerminalJob().start();
 RetryBillsJob().start();
 
-const port = process.env.PORT || 9000;
+const port = process.env.PORT || 80;
 server.listen(port, function () {
   logger.info(`App running @ port ${port}`);
 });

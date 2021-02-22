@@ -34,7 +34,6 @@ ReQueryEmitter.on(REQUERY_TRANSACTION_EMITTER, function (
       if (!transactionObject) {
         transactionObject = await saveTransaction(transactionReference);
       }
-
       /*
               once retry count is greater than 0, the payment should
               be reprocessed and count should be set back to 0. once this is done, the
