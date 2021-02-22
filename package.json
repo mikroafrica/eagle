@@ -10,9 +10,7 @@
     "build:lib": "babel src/ -d lib/",
     "build:flow": "flow-copy-source -v src/ lib/",
     "postinstall": "npm run build",
-    "start": "node lib/index.js",
-    "heroku-prebuild": "bash preinstall.sh",
-    "heroku-postbuild": "bash postinstall.sh"
+    "start": "node lib/index.js"
   },
   "husky": {
     "hooks": {
