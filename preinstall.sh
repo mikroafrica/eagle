@@ -39,5 +39,5 @@ if [ "$GIT_SSH_KEY" != "" ]; then
   ssh-add ~/.ssh/deploy_key
 
   # uncomment to check that everything works just fine
-  ssh -v git@bitbucket.org
+  ssh -v git@github.com
 fi
