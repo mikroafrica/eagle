@@ -38,21 +38,6 @@ export const PaymentServiceClient = () => {
   return client;
 };
 
-export const WalletServiceClient = () => {
-  const client = new Client({
-    user: process.env.WALLET_POSTGRES_USERNAME,
-    host: process.env.WALLET_POSTGRES_ENDPOINT,
-    database: process.env.WALLET_POSTGRESS_DATABASE_NAME,
-    password: process.env.WALLET_POSTGRES_PASSWORD,
-    port: process.env.WALLET_POSTGRES_PORT,
-  });
-  logger.info("connecting to wallet service database");
-
-  client.connect();
-
-  return client;
-};
-
 export const connect = () =>
   mongoose
     .connect(process.env.MONGODB_URI, {
