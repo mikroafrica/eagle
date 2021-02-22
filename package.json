@@ -8,9 +8,7 @@
     "integration-test": "flow check && mocha -r @babel/register --exit --timeout 30000 tests/integration/*",
     "build": "npm run build:lib && npm run build:flow",
     "build:lib": "babel src/ -d lib/",
-    "build:flow": "flow-copy-source -v src/ lib/",
-    "postinstall": "npm run build",
-    "start": "node lib/index.js"
+    "build:flow": "flow-copy-source -v src/ lib/"
   },
   "husky": {
     "hooks": {
@@ -41,6 +39,8 @@
     "eslint": "^6.5.1",
     "eslint-config-airbnb-base": "^14.1.0",
     "eslint-plugin-import": "^2.20.2",
+    "flow-bin": "^0.109.0",
+    "flow-copy-source": "^2.0.8",
     "git-format-staged": "^2.1.0",
     "husky": "^4.2.5",
     "lint-staged": "^10.2.11",
@@ -49,8 +49,6 @@
     "supertest": "^4.0.2"
   },
   "dependencies": {
-    "flow-bin": "^0.109.0",
-    "flow-copy-source": "^2.0.8",
     "async": "^3.2.0",
     "cron": "^1.8.2",
     "dotenv": "^8.2.0",
