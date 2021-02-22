@@ -3,7 +3,6 @@ import cron from "cron";
 const CronJob = cron.CronJob;
 
 import moment from "moment";
-
 import { TransactionServiceClient } from "../../../../db";
 import logger from "../../../../../logger";
 
