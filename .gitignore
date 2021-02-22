@@ -2,7 +2,4 @@ lib/
 node_modules
 .idea
 .env
-*lock*
 **/.DS_Store
-rescue.js
-rescue-value.js

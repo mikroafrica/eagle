@@ -41,8 +41,7 @@ function reQueryPendingWithdrawalWalletTopUp(callback) {
       billerPurchaseTransactionStatus,
       pendingPaymentReversalStatus,
       withdrawalTransactionType,
-      // previousDayInMorning(),
-      1611615659000,
+      previousDayInMorning(),
       night(),
     ],
   };
