@@ -1,11 +1,6 @@
 import Events from "events";
 import type { BillingModel, ReQueryModel } from "../../../commons/model";
 import async from "async";
-import {
-  findByTransactionReference,
-  saveTransaction,
-  updateByTransactionReference,
-} from "../../model/transaction.service";
 import logger from "../../../../../logger";
 
 const Emitter = Events.EventEmitter;
