@@ -11,7 +11,7 @@ import {
   previousDayInMorning,
   TransactionMessagingType,
 } from "../commons/model";
-import { PaymentServiceClient } from "../../db";
+import { PaymentServiceClient, TransactionServiceClient } from "../../db";
 import type { TransactionMessaging } from "../commons/model";
 import { PAYMENT_EMITTER } from "./requery.payment.event";
 import paymentEvent from "./requery.payment.event";
@@ -32,7 +32,7 @@ function handleWalletTopUp(data): TransactionMessaging {
   };
 }
 
-function reQueryPendingWalletTop(callback) {
+async function reQueryPendingWalletTop() {
   const handShakeStatus = "PUBLISHED_COMPLETED";
   const query = {
     text:
@@ -48,29 +48,21 @@ function reQueryPendingWalletTop(callback) {
     ],
   };
 
-  const client = PaymentServiceClient();
+  const pool = PaymentServiceClient();
+  const client = await pool.connect();
+  const response = await client.query(query.text, query.values);
+  const results = response.rows;
 
-  client
-    .query(query)
-    .then((response) => {
-      const results = response.rows;
-      logger.info(
-        `Total number of queried payment for wallet topup results is [${results.length}]`
-      );
-      const transactionMessaging: TransactionMessaging[] = results.map(
-        function (data) {
-          return handleWalletTopUp(data);
-        }
-      );
-      callback(transactionMessaging);
-
-      client.end();
-    })
-    .catch((error) => {
-      logger.error(
-        `error occurred while fetching pending with error [${error}]`
-      );
-    });
+  logger.info(
+    `Total number of queried payment for wallet topup results is [${results.length}]`
+  );
+  const transactionMessaging: TransactionMessaging[] = results.map(function (
+    data
+  ) {
+    return handleWalletTopUp(data);
+  });
+  pool.end();
+  return Promise.resolve(transactionMessaging);
 }
 
 export const RetryPaymentWalletTopUpJob = (): CronJob => {
@@ -80,11 +72,13 @@ export const RetryPaymentWalletTopUpJob = (): CronJob => {
       `::: Wallet top-up from payment db processing for payment started ${formattedDate} :::`
     );
 
-    reQueryPendingWalletTop(function (
-      transactionMessaging: TransactionMessaging[]
-    ) {
-      paymentEvent.emit(PAYMENT_EMITTER, transactionMessaging);
-    });
+    reQueryPendingWalletTop()
+      .then((transactionMessaging) => {
+        paymentEvent.emit(PAYMENT_EMITTER, transactionMessaging);
+      })
+      .catch((err) => {
+        logger.error(`error occurred while publishing result: ${err} `);
+      });
   });
 };
 
@@ -107,7 +101,7 @@ function handleTerminal(data): TransactionMessaging {
   };
 }
 
-function reQueryPendingTerminal(callback) {
+async function reQueryPendingTerminal() {
   const completedhandShakeStatus = "PUBLISHED_COMPLETED";
 
   const pastThreeMinutes = pastMinutes(3);
@@ -130,29 +124,21 @@ function reQueryPendingTerminal(callback) {
     ],
   };
 
-  const client = PaymentServiceClient();
+  const pool = PaymentServiceClient();
+  const client = await pool.connect();
+  const response = await client.query(query.text, query.values);
+  const results = response.rows;
 
-  client
-    .query(query)
-    .then((response) => {
-      const results = response.rows;
-      logger.info(
-        `Total number of queried payment for terminal results is [${results.length}]`
-      );
-      const transactionMessaging: TransactionMessaging[] = results.map(
-        function (data) {
-          return handleTerminal(data);
-        }
-      );
-      callback(transactionMessaging);
-
-      client.end();
-    })
-    .catch((error) => {
-      logger.error(
-        `error occurred while fetching pending with error [${error}]`
-      );
-    });
+  logger.info(
+    `Total number of queried payment for terminal results is [${results.length}]`
+  );
+  const transactionMessaging: TransactionMessaging[] = results.map(function (
+    data
+  ) {
+    return handleTerminal(data);
+  });
+  pool.end();
+  return Promise.resolve(transactionMessaging);
 }
 
 export const RetryPaymentTerminalJob = (): CronJob => {
@@ -160,10 +146,12 @@ export const RetryPaymentTerminalJob = (): CronJob => {
     const formattedDate = moment.tz("Africa/Lagos");
     logger.info(`::: re-processing for payment started ${formattedDate} :::`);
 
-    reQueryPendingTerminal(function (
-      transactionMessaging: TransactionMessaging[]
-    ) {
-      paymentEvent.emit(PAYMENT_EMITTER, transactionMessaging);
-    });
+    reQueryPendingTerminal()
+      .then((transactionMessaging) => {
+        paymentEvent.emit(PAYMENT_EMITTER, transactionMessaging);
+      })
+      .catch((err) => {
+        logger.error(`error occurred while publishing result: ${err} `);
+      });
   });
 };

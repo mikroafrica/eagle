@@ -14,7 +14,6 @@ import {
   billerPurchaseTransactionStatus,
   cableTransactionType,
   dataTransactionType,
-  morning,
   night,
   paymentSuccessfulTransactionStatus,
   pendingTransactionStatus,
@@ -23,7 +22,7 @@ import {
 } from "../../../commons/model";
 import type { BillingModel } from "../../../commons/model";
 
-function reQueryPendingBills(callback) {
+async function reQueryPendingBills() {
   const query = {
     text:
       "SELECT * FROM transactions tnx " +
@@ -46,37 +45,28 @@ function reQueryPendingBills(callback) {
     ],
   };
 
-  const client = TransactionServiceClient();
-  client
-    .query(query)
-    .then((response) => {
-      const results = response.rows;
-      logger.info(
-        `Total number of queried bills results is [${results.length}]`
-      );
-      const billingModels: BillingModel[] = results.map(function (data) {
-        return {
-          transactionReference: data.transaction_reference,
-          vendor: data.vendor,
-          phoneNumber:
-            data.meta.data.customerPhoneNumber || data.customer_biller_id,
-          amount: data.amount,
-          productId: data.meta.data.productId,
-          meterNumber: data.customer_biller_id,
-          type: data.name,
-          smartCardNumber: data.customer_biller_id,
-          category: data.name,
-        };
-      });
-      callback(billingModels);
+  const pool = TransactionServiceClient();
+  const client = await pool.connect();
+  const response = await client.query(query.text, query.values);
+  const results = response.rows;
 
-      client.end();
-    })
-    .catch((error) => {
-      logger.error(
-        `error occurred while fetching pending with error [${error}]`
-      );
-    });
+  logger.info(`Total number of queried bills results is [${results.length}]`);
+  const billingModels: BillingModel[] = results.map(function (data) {
+    return {
+      transactionReference: data.transaction_reference,
+      vendor: data.vendor,
+      phoneNumber:
+        data.meta.data.customerPhoneNumber || data.customer_biller_id,
+      amount: data.amount,
+      productId: data.meta.data.productId,
+      meterNumber: data.customer_biller_id,
+      type: data.name,
+      smartCardNumber: data.customer_biller_id,
+      category: data.name,
+    };
+  });
+  pool.end();
+  return Promise.resolve(billingModels);
 }
 
 // run job every three minutes
@@ -85,8 +75,12 @@ export const RetryBillsJob = (): CronJob => {
     const formattedDate = moment.tz("Africa/Lagos");
     logger.info(`::: reQuery for bills started ${formattedDate} :::`);
 
-    reQueryPendingBills(function (billingModels: BillingModel[]) {
-      reQueryBillEvent.emit(RE_QUERY_BILL_EMITTER, billingModels);
-    });
+    reQueryPendingBills()
+      .then((billingModels) => {
+        reQueryBillEvent.emit(RE_QUERY_BILL_EMITTER, billingModels);
+      })
+      .catch((err) => {
+        logger.error(`error occurred while publishing result: ${err} `);
+      });
   });
 };

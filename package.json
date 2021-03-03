@@ -8,7 +8,8 @@
     "integration-test": "flow check && mocha -r @babel/register --exit --timeout 30000 tests/integration/*",
     "build": "npm run build:lib && npm run build:flow",
     "build:lib": "babel src/ -d lib/",
-    "build:flow": "flow-copy-source -v src/ lib/"
+    "build:flow": "flow-copy-source -v src/ lib/",
+    "start": "node lib/index.js"
   },
   "husky": {
     "hooks": {
