@@ -46,27 +46,32 @@ async function reQueryPendingBills() {
   };
 
   const pool = TransactionServiceClient();
-  const client = await pool.connect();
-  const response = await client.query(query.text, query.values);
-  const results = response.rows;
+  try {
+    const client = await pool.connect();
+    const response = await client.query(query.text, query.values);
+    const results = response.rows;
 
-  logger.info(`Total number of queried bills results is [${results.length}]`);
-  const billingModels: BillingModel[] = results.map(function (data) {
-    return {
-      transactionReference: data.transaction_reference,
-      vendor: data.vendor,
-      phoneNumber:
-        data.meta.data.customerPhoneNumber || data.customer_biller_id,
-      amount: data.amount,
-      productId: data.meta.data.productId,
-      meterNumber: data.customer_biller_id,
-      type: data.name,
-      smartCardNumber: data.customer_biller_id,
-      category: data.name,
-    };
-  });
-  pool.end();
-  return Promise.resolve(billingModels);
+    logger.info(`Total number of queried bills results is [${results.length}]`);
+    const billingModels: BillingModel[] = results.map(function (data) {
+      return {
+        transactionReference: data.transaction_reference,
+        vendor: data.vendor,
+        phoneNumber:
+          data.meta.data.customerPhoneNumber || data.customer_biller_id,
+        amount: data.amount,
+        productId: data.meta.data.productId,
+        meterNumber: data.customer_biller_id,
+        type: data.name,
+        smartCardNumber: data.customer_biller_id,
+        category: data.name,
+      };
+    });
+    pool.end();
+    return Promise.resolve(billingModels);
+  } catch (e) {
+    pool.end();
+    return Promise.reject(e);
+  }
 }
 
 // run job every three minutes
