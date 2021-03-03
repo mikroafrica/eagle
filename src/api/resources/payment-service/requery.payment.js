@@ -49,20 +49,25 @@ async function reQueryPendingWalletTop() {
   };
 
   const pool = PaymentServiceClient();
-  const client = await pool.connect();
-  const response = await client.query(query.text, query.values);
-  const results = response.rows;
+  try {
+    const client = await pool.connect();
+    const response = await client.query(query.text, query.values);
+    const results = response.rows;
 
-  logger.info(
-    `Total number of queried payment for wallet topup results is [${results.length}]`
-  );
-  const transactionMessaging: TransactionMessaging[] = results.map(function (
-    data
-  ) {
-    return handleWalletTopUp(data);
-  });
-  pool.end();
-  return Promise.resolve(transactionMessaging);
+    logger.info(
+      `Total number of queried payment for wallet topup results is [${results.length}]`
+    );
+    const transactionMessaging: TransactionMessaging[] = results.map(function (
+      data
+    ) {
+      return handleWalletTopUp(data);
+    });
+    pool.end();
+    return Promise.resolve(transactionMessaging);
+  } catch (e) {
+    pool.end();
+    return Promise.reject(e);
+  }
 }
 
 export const RetryPaymentWalletTopUpJob = (): CronJob => {

@@ -45,43 +45,47 @@ async function reQueryPendingWithdrawalWalletTopUp() {
   };
 
   const pool = TransactionServiceClient();
-  const client = await pool.connect();
-  const response = await client.query(query.text, query.values);
+  try {
+    const client = await pool.connect();
+    const response = await client.query(query.text, query.values);
 
-  const results = response.rows;
+    const results = response.rows;
 
-  logger.info(
-    `Total number of queried withdrawal results is [${results.length}]`
-  );
-  const transactionMessaging: TransactionMessaging = results.map(function (
-    data
-  ) {
-    console.log(data);
-    let status = TransactionStatus.PENDING;
-    if (data.transaction_status === "5" || data.transaction_status === "3") {
-      status = TransactionStatus.SUCCESS;
-    }
+    logger.info(
+      `Total number of queried withdrawal results is [${results.length}]`
+    );
+    const transactionMessaging: TransactionMessaging = results.map(function (
+      data
+    ) {
+      let status = TransactionStatus.PENDING;
+      if (data.transaction_status === "5" || data.transaction_status === "3") {
+        status = TransactionStatus.SUCCESS;
+      }
 
-    if (data.transaction_status === "10") {
-      status = TransactionStatus.REVERSAL;
-    }
+      if (data.transaction_status === "10") {
+        status = TransactionStatus.REVERSAL;
+      }
 
-    return {
-      paymentReference: data.unique_identifier,
-      amount: data.amount,
-      vendor: data.vendor,
-      paymentStatus: status,
-      type: TransactionMessagingType.TERMINAL,
-      terminalId: data.customer_biller_id,
-      // callbackResponse: data.gateway_response, this is not necessary to return
-      // back to the user
-      userId: data.user_id,
-      walletId: data.destination_wallet_id,
-      timeCreated: data.time_created,
-    };
-  });
-  pool.end();
-  return Promise.resolve(transactionMessaging);
+      return {
+        paymentReference: data.unique_identifier,
+        amount: data.amount,
+        vendor: data.vendor,
+        paymentStatus: status,
+        type: TransactionMessagingType.TERMINAL,
+        terminalId: data.customer_biller_id,
+        // callbackResponse: data.gateway_response, this is not necessary to return
+        // back to the user
+        userId: data.user_id,
+        walletId: data.destination_wallet_id,
+        timeCreated: data.time_created,
+      };
+    });
+    pool.end();
+    return Promise.resolve(transactionMessaging);
+  } catch (e) {
+    pool.end();
+    return Promise.reject(e);
+  }
 }
 
 export const RetryWithdrawalJob = (): CronJob => {

@@ -47,31 +47,35 @@ async function reQueryPendingTransfer() {
       pastThreeMinutes,
     ],
   };
-
   const pool = TransactionServiceClient();
-  const client = await pool.connect();
-  const response = await client.query(query.text, query.values);
+  try {
+    const client = await pool.connect();
+    const response = await client.query(query.text, query.values);
 
-  const results = response.rows;
-  logger.info(
-    `Total number of queried transfer results is [${results.length}]`
-  );
-  const paymentListDto: PaymentDto[] = results.map(function (data) {
-    const amount = parseFloat(data.amount);
-    return {
-      userId: data.user_id,
-      amount: amount,
-      bankCode: data.product,
-      customerName: data.userdata.name,
-      remarks: data.userdata.remarks,
-      paymentDate: data.time_updated,
-      transactionRef: data.transaction_reference,
-      accountNumber: data.customer_biller_id,
-      paymentType: PaymentType.BANK_TRANSFER_REQUERY,
-    };
-  });
-  pool.end();
-  return Promise.resolve(paymentListDto);
+    const results = response.rows;
+    logger.info(
+      `Total number of queried transfer results is [${results.length}]`
+    );
+    const paymentListDto: PaymentDto[] = results.map(function (data) {
+      const amount = parseFloat(data.amount);
+      return {
+        userId: data.user_id,
+        amount: amount,
+        bankCode: data.product,
+        customerName: data.userdata.name,
+        remarks: data.userdata.remarks,
+        paymentDate: data.time_updated,
+        transactionRef: data.transaction_reference,
+        accountNumber: data.customer_biller_id,
+        paymentType: PaymentType.BANK_TRANSFER_REQUERY,
+      };
+    });
+    pool.end();
+    return Promise.resolve(paymentListDto);
+  } catch (e) {
+    pool.end();
+    return Promise.reject(e);
+  }
 }
 
 // run job every one minutes
