@@ -1,15 +1,13 @@
 import pg from "pg";
-
-const Client = pg.Client;
+const { Pool } = pg;
 
 import mongoose from "mongoose";
-
 mongoose.Promise = global.Promise;
 
 import logger from "../logger";
 
 export const TransactionServiceClient = () => {
-  const client = new Client({
+  const client = new Pool({
     user: process.env.TRANSACTION_POSTGRES_USERNAME,
     host: process.env.TRANSACTION_POSTGRES_ENDPOINT,
     database: process.env.TRANSACTION_POSTGRESS_DATABASE_NAME,
@@ -17,14 +15,11 @@ export const TransactionServiceClient = () => {
     port: process.env.TRANSACTION_POSTGRES_PORT,
   });
   logger.info("connecting to transaction service database");
-
-  client.connect();
-
   return client;
 };
 
 export const PaymentServiceClient = () => {
-  const client = new Client({
+  const client = new Pool({
     user: process.env.PAYMENT_POSTGRES_USERNAME,
     host: process.env.PAYMENT_POSTGRES_ENDPOINT,
     database: process.env.PAYMENT_POSTGRESS_DATABASE_NAME,
@@ -32,9 +27,6 @@ export const PaymentServiceClient = () => {
     port: process.env.PAYMENT_POSTGRES_PORT,
   });
   logger.info("connecting to payment service database");
-
-  client.connect();
-
   return client;
 };
 

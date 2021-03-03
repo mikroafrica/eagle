@@ -12,7 +12,6 @@ import reQueryWithdrawalEmitter, {
 
 import {
   billerPurchaseTransactionStatus,
-  morning,
   night,
   paymentSuccessfulTransactionStatus,
   pendingPaymentReversalStatus,
@@ -24,7 +23,7 @@ import {
 } from "../../../commons/model";
 import type { TransactionMessaging } from "../../../commons/model";
 
-function reQueryPendingWithdrawalWalletTopUp(callback) {
+async function reQueryPendingWithdrawalWalletTopUp() {
   const query = {
     text:
       "SELECT * FROM transactions tnx " +
@@ -45,55 +44,44 @@ function reQueryPendingWithdrawalWalletTopUp(callback) {
     ],
   };
 
-  const client = TransactionServiceClient();
+  const pool = TransactionServiceClient();
+  const client = await pool.connect();
+  const response = await client.query(query.text, query.values);
 
-  client
-    .query(query)
-    .then((response) => {
-      const results = response.rows;
+  const results = response.rows;
 
-      logger.info(
-        `Total number of queried withdrawal results is [${results.length}]`
-      );
-      const transactionMessaging: TransactionMessaging = results.map(function (
-        data
-      ) {
-        console.log(data);
-        let status = TransactionStatus.PENDING;
-        if (
-          data.transaction_status === "5" ||
-          data.transaction_status === "3"
-        ) {
-          status = TransactionStatus.SUCCESS;
-        }
+  logger.info(
+    `Total number of queried withdrawal results is [${results.length}]`
+  );
+  const transactionMessaging: TransactionMessaging = results.map(function (
+    data
+  ) {
+    console.log(data);
+    let status = TransactionStatus.PENDING;
+    if (data.transaction_status === "5" || data.transaction_status === "3") {
+      status = TransactionStatus.SUCCESS;
+    }
 
-        if (data.transaction_status === "10") {
-          status = TransactionStatus.REVERSAL;
-        }
+    if (data.transaction_status === "10") {
+      status = TransactionStatus.REVERSAL;
+    }
 
-        return {
-          paymentReference: data.unique_identifier,
-          amount: data.amount,
-          vendor: data.vendor,
-          paymentStatus: status,
-          type: TransactionMessagingType.TERMINAL,
-          terminalId: data.customer_biller_id,
-          // callbackResponse: data.gateway_response, this is not necessary to return
-          // back to the user
-          userId: data.user_id,
-          walletId: data.destination_wallet_id,
-          timeCreated: data.time_created,
-        };
-      });
-      callback(transactionMessaging);
-
-      client.end();
-    })
-    .catch((error) => {
-      logger.error(
-        `error occurred while fetching pending withdrawal transaction on transaction service level with error [${error}]`
-      );
-    });
+    return {
+      paymentReference: data.unique_identifier,
+      amount: data.amount,
+      vendor: data.vendor,
+      paymentStatus: status,
+      type: TransactionMessagingType.TERMINAL,
+      terminalId: data.customer_biller_id,
+      // callbackResponse: data.gateway_response, this is not necessary to return
+      // back to the user
+      userId: data.user_id,
+      walletId: data.destination_wallet_id,
+      timeCreated: data.time_created,
+    };
+  });
+  pool.end();
+  return Promise.resolve(transactionMessaging);
 }
 
 export const RetryWithdrawalJob = (): CronJob => {
@@ -101,13 +89,15 @@ export const RetryWithdrawalJob = (): CronJob => {
     const formattedDate = moment.tz("Africa/Lagos");
     logger.info(`::: reQuery for withdrawal started ${formattedDate} :::`);
 
-    reQueryPendingWithdrawalWalletTopUp(function (
-      transactionMessaging: TransactionMessaging
-    ) {
-      reQueryWithdrawalEmitter.emit(
-        REQUERY_WITHDRAWAL_EMITTER,
-        transactionMessaging
-      );
-    });
+    reQueryPendingWithdrawalWalletTopUp()
+      .then((transactionMessaging) => {
+        reQueryWithdrawalEmitter.emit(
+          REQUERY_WITHDRAWAL_EMITTER,
+          transactionMessaging
+        );
+      })
+      .catch((err) => {
+        logger.error(`error occurred while publishing result: ${err} `);
+      });
   });
 };
