@@ -118,7 +118,7 @@ async function reQueryPendingTerminal() {
       "JOIN terminals terminalPro ON " +
       "tnx.customer_biller_id = terminalPro.terminal_id " +
       "WHERE handshake_status != $1 AND tnx.type = $2 " +
-      "AND tnx.time_updated >= $3 AND tnx.time_updated <= $4 " +
+      "AND tnx.time_created >= $3 AND tnx.time_created <= $4 " +
       "ORDER BY tnxDate DESC limit 70",
 
     values: [
