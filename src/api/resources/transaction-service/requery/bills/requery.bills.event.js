@@ -22,7 +22,7 @@ ReQueryEmitter.on(RE_QUERY_BILL_EMITTER, function (
 
       const reQueryModel: ReQueryModel = {
         vendor: billingModel.vendor,
-        type: "REQUERY",
+        transactionMessagingType: "REQUERY",
         transactionReference: billingModel.transactionReference,
       };
 
