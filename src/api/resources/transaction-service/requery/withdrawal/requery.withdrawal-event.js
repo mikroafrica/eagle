@@ -41,25 +41,23 @@ function publishTerminalDto(transactionMessaging: TransactionMessaging) {
       hostname: process.env.KAFKA_HOST,
       username: process.env.KAFKA_USERNAME,
       password: process.env.KAFKA_PASSWORD,
-      topic: process.env.KAFKA_VENDOR_PAYMENT_TOPIC,
+      topic: process.env.KAFKA_TRANSACTION_TOPIC,
+      groupId: process.env.KAFKA_CLUSTER_ID,
     };
 
-    mikroProducer(config, JSON.stringify(transactionMessaging), function (
-      err,
-      data
-    ) {
-      if (err) {
-        logger.error(`error occurred while publishing withdrawal [${err}]`);
-        reject();
+    mikroProducer(
+      config,
+      transactionMessaging,
+      transactionMessaging.paymentReference,
+      function (response) {
+        logger.info(
+          `published reQuery withdrawal for reference [${
+            transactionMessaging.paymentReference
+          }] with response [${JSON.stringify(response)}]`
+        );
+        resolve();
       }
-
-      logger.info(
-        `::: published reQuery withdrawal for payment reference [${transactionMessaging.paymentReference}] 
-        and terminal id [${transactionMessaging.terminalId}] :::`
-      );
-
-      resolve();
-    });
+    );
   });
 }
 

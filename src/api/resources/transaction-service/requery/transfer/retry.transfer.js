@@ -67,7 +67,7 @@ async function reQueryPendingTransfer() {
         paymentDate: data.time_updated,
         transactionRef: data.transaction_reference,
         accountNumber: data.customer_biller_id,
-        paymentType: PaymentType.BANK_TRANSFER_REQUERY,
+        type: PaymentType.BANK_TRANSFER_REQUERY,
       };
     });
     pool.end();

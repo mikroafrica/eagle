@@ -50,7 +50,7 @@ ReQueryEmitter.on(REQUERY_TRANSACTION_EMITTER, function (
         updatedReProcessCount = updatedReProcessCount + 1;
 
         paymentDto = Object.assign(paymentDto, {
-          paymentType: PaymentType.BANK_TRANSFER_REPROCESS,
+          type: PaymentType.BANK_TRANSFER_REPROCESS,
         });
       } else {
         updatedRetryCount = updatedRetryCount + 1;
@@ -88,17 +88,17 @@ function publishPaymentDto(
       hostname: process.env.KAFKA_HOST,
       username: process.env.KAFKA_USERNAME,
       password: process.env.KAFKA_PASSWORD,
-      topic: process.env.KAFKA_PAYMENT_PAYLOAD_TOPIC,
+      topic: process.env.KAFKA_PAYMENT_TOPIC,
+      groupId: process.env.KAFKA_CLUSTER_ID,
     };
 
-    mikroProducer(config, JSON.stringify(paymentDto), function (err, data) {
-      if (err) {
-        logger.error(`error occurred while publishing transfer [${err}]`);
-        reject();
-      }
-
+    mikroProducer(config, paymentDto, transactionReference, function (
+      response
+    ) {
       logger.info(
-        `published reQuery transfer for reference [${transactionReference}]`
+        `pushed requery for ref [${transactionReference}] with response [${JSON.stringify(
+          response
+        )}]`
       );
 
       resolve();
