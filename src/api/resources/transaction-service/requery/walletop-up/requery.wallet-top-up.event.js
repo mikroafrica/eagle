@@ -66,24 +66,20 @@ function publishWalletTopUpDto(
       hostname: process.env.KAFKA_HOST,
       username: process.env.KAFKA_USERNAME,
       password: process.env.KAFKA_PASSWORD,
-      topic: process.env.KAFKA_VENDOR_PAYMENT_TOPIC,
+      topic: process.env.KAFKA_TRANSACTION_TOPIC,
+      groupId: process.env.KAFKA_CLUSTER_ID,
     };
 
     mikroProducer(
       config,
-      JSON.stringify(transactionContainer.messaging),
-      function (err, data) {
-        if (err) {
-          logger.error(
-            `error occurred while publishing wallet top-up [${err}]`
-          );
-          reject();
-        }
-
+      transactionContainer.messaging,
+      transactionContainer.transactionReference,
+      function (response) {
         logger.info(
-          `published reQuery wallet top-up for reference [${transactionContainer.transactionReference}]`
+          `published reQuery wallet top-up for reference [${
+            transactionContainer.transactionReference
+          }] with response [${JSON.stringify(response)}]`
         );
-
         resolve();
       }
     );

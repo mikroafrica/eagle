@@ -135,6 +135,12 @@ export type TransactionMessaging = {
   userId: string,
   terminalId: string,
   timeCreated: number,
+  remarks: string,
+  paymentDate: string,
+  transactionRef: string,
+  bankCode: string,
+  customerName: string,
+  paymentType: string,
 };
 
 export type TransactionMessagingContainer = {
