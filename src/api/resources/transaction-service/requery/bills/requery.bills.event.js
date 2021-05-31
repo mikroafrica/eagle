@@ -22,6 +22,7 @@ ReQueryEmitter.on(RE_QUERY_BILL_EMITTER, function (
 
       const reQueryModel: ReQueryModel = {
         vendor: billingModel.vendor,
+        type: "REQUERY",
         transactionReference: billingModel.transactionReference,
       };
 
@@ -54,18 +55,24 @@ function publishReQuery(reQueryModel: ReQueryModel) {
       hostname: process.env.KAFKA_HOST,
       username: process.env.KAFKA_USERNAME,
       password: process.env.KAFKA_PASSWORD,
-      topic: process.env.KAFKA_BILL_REQUERY_TOPIC,
+      topic: process.env.KAFKA_BILLING_TOPIC,
+      groupId: process.env.KAFKA_CLUSTER_ID,
     };
 
-    mikroProducer(config, JSON.stringify(reQueryModel), function (err, data) {
-      if (err) {
-        logger.error(`error occurred while publishing transfer [${err}]`);
-        reject();
-      }
-      logger.info(`published reQuery bills [${JSON.stringify(reQueryModel)}]`);
+    mikroProducer(
+      config,
+      reQueryModel,
+      reQueryModel.transactionReference,
+      function (response) {
+        logger.info(
+          `pushed requery for ref [${reQueryModel}] with response [${JSON.stringify(
+            response
+          )}]`
+        );
 
-      resolve();
-    });
+        resolve();
+      }
+    );
   });
 }
 
