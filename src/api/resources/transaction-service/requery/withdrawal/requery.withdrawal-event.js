@@ -48,7 +48,7 @@ function publishTerminalDto(transactionMessaging: TransactionMessaging) {
     mikroProducer(
       config,
       transactionMessaging,
-      transactionMessaging.paymentReference,
+      transactionMessaging.paymentReference + `${new Date().getTime()}`,
       function (response) {
         logger.info(
           `published reQuery withdrawal for reference [${
