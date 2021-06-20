@@ -23,14 +23,14 @@ import {
 } from "../../../commons/model";
 import type { TransactionMessaging } from "../../../commons/model";
 
-async function reQueryPendingWithdrawalWalletTopUp() {
+async function reQueryPendingWithdrawal() {
   const query = {
     text:
       "SELECT * FROM transactions tnx " +
       "JOIN transaction_statuses status ON status.id = tnx.transaction_status " +
       "JOIN transaction_types type ON type.id = tnx.transaction_type " +
       "WHERE (status.name = $1 OR status.name = $2 OR status.name = $3 OR status.name = $4) " +
-      "AND type.name = $5 AND tnx.time_updated >= $6 AND tnx.time_updated <= $7 AND tnx.user_id != 'unAssigned' " +
+      "AND type.name = $5 AND tnx.time_created >= $6 AND tnx.time_updated <= $7 AND tnx.user_id != 'unAssigned' " +
       "ORDER BY tnx.time_updated DESC limit 100 ",
 
     values: [
@@ -93,7 +93,7 @@ export const RetryWithdrawalJob = (): CronJob => {
     const formattedDate = moment.tz("Africa/Lagos");
     logger.info(`::: reQuery for withdrawal started ${formattedDate} :::`);
 
-    reQueryPendingWithdrawalWalletTopUp()
+    reQueryPendingWithdrawal()
       .then((transactionMessaging) => {
         reQueryWithdrawalEmitter.emit(
           REQUERY_WITHDRAWAL_EMITTER,
