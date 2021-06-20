@@ -14,9 +14,9 @@ process.on("uncaughtException", function (err) {
   logger.error(`uncaught error has been fired with Error: ${err}`);
 });
 
+RetryWithdrawalJob().start();
 RetryTransferJob().start();
 RetryWalletTopUpJob().start();
-RetryWithdrawalJob().start();
 
 RetryPaymentWalletTopUpJob().start();
 RetryPaymentTerminalJob().start();
