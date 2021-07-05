@@ -5,7 +5,7 @@ import { RetryWalletTopUpJob } from "./api/resources/transaction-service/requery
 import { RetryWithdrawalJob } from "./api/resources/transaction-service/requery/withdrawal/requery.withdrawal";
 import {
   RetryPaymentTerminalJob,
-  RetryPaymentWalletTopUpJob,
+  RetryPaymentWalletTopAndUSSDJob,
 } from "./api/resources/payment-service/requery.payment";
 import { RetryBillsJob } from "./api/resources/transaction-service/requery/bills";
 
@@ -18,7 +18,7 @@ RetryWithdrawalJob().start();
 RetryTransferJob().start();
 RetryWalletTopUpJob().start();
 
-RetryPaymentWalletTopUpJob().start();
+RetryPaymentWalletTopAndUSSDJob().start();
 RetryPaymentTerminalJob().start();
 RetryBillsJob().start();
 
