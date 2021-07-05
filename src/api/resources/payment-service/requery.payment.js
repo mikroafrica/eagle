@@ -32,17 +32,18 @@ function handleWalletTopUp(data): TransactionMessaging {
   };
 }
 
-async function reQueryPendingWalletTop() {
+async function reQueryPendingWalletTopAndUSSD() {
   const handShakeStatus = "PUBLISHED_COMPLETED";
   const query = {
     text:
       "SELECT * FROM transactions tnx " +
-      "WHERE handshake_status != $1 AND tnx.type = $2 " +
-      "AND tnx.time_updated >= $3 AND tnx.time_updated <= $4 ",
+      "WHERE handshake_status != $1 AND (tnx.type = $2 OR tnx.type = $3) " +
+      "AND tnx.time_updated >= $4 AND tnx.time_updated <= $5 ",
 
     values: [
       handShakeStatus,
       TransactionMessagingType.WALLET_TOP_UP,
+      TransactionMessagingType.USSD_WITHDRAWAL,
       previousDayInMorning(),
       night(),
     ],
@@ -70,14 +71,14 @@ async function reQueryPendingWalletTop() {
   }
 }
 
-export const RetryPaymentWalletTopUpJob = (): CronJob => {
+export const RetryPaymentWalletTopAndUSSDJob = (): CronJob => {
   return new CronJob("0 */5 * * * *", function () {
     const formattedDate = moment.tz("Africa/Lagos");
     logger.info(
       `::: Wallet top-up from payment db processing for payment started ${formattedDate} :::`
     );
 
-    reQueryPendingWalletTop()
+    reQueryPendingWalletTopAndUSSD()
       .then((transactionMessaging) => {
         paymentEvent.emit(PAYMENT_EMITTER, transactionMessaging);
       })

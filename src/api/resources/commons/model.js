@@ -152,6 +152,7 @@ export const TransactionMessagingType = {
   WALLET_TOP_UP: "WALLET_TOP_UP",
   BANK_TRANSFER: "BANK_TRANSFER",
   TERMINAL: "TERMINAL",
+  USSD_WITHDRAWAL: "USSD_WITHDRAWAL",
 };
 
 export const TransactionStatus = {
