@@ -34,7 +34,7 @@ async function reQueryPendingTransfer() {
       "JOIN transaction_types type ON type.id = tnx.transaction_type " +
       "WHERE (status.name = $1 OR status.name = $2 OR status.name = $3) " +
       "AND (type.name = $4 OR type.name = $5) " +
-      "AND tnx.time_created >= $6 AND tnx.time_created <= $7 " +
+      "AND tnx.time_updated >= $6 AND tnx.time_updated <= $7 " +
       "ORDER BY tnx.time_created DESC limit 100",
 
     values: [
