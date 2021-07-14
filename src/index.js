@@ -14,13 +14,13 @@ process.on("uncaughtException", function (err) {
   logger.error(`uncaught error has been fired with Error: ${err}`);
 });
 
-RetryWithdrawalJob().start();
 RetryTransferJob().start();
 RetryWalletTopUpJob().start();
 
 RetryPaymentWalletTopAndUSSDJob().start();
 RetryPaymentTerminalJob().start();
 RetryBillsJob().start();
+RetryWithdrawalJob().start();
 
 const port = process.env.PORT || 80;
 server.listen(port, function () {
