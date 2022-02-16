@@ -10,6 +10,7 @@ import reQueryTransferEvent from "./requery.transfer.event";
 import { REQUERY_TRANSACTION_EMITTER } from "./requery.transfer.event";
 import {
   billerPurchaseTransactionStatus,
+  morning,
   pastMinutes,
   paymentSuccessfulTransactionStatus,
   payoutTransactionType,
@@ -23,6 +24,8 @@ export const PaymentType = {
   BANK_TRANSFER_REQUERY: "BANK_TRANSFER_REQUERY",
   BANK_TRANSFER_REPROCESS: "BANK_TRANSFER_REPROCESS",
 };
+
+console.log(morning());
 
 async function reQueryPendingTransfer() {
   const pastThreeMinutes = pastMinutes(2);
@@ -43,7 +46,7 @@ async function reQueryPendingTransfer() {
       billerPurchaseTransactionStatus,
       transferTransactionType,
       payoutTransactionType,
-      previousDayInMorning(),
+      morning(),
       pastThreeMinutes,
     ],
   };
