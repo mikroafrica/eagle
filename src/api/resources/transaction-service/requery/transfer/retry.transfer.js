@@ -25,8 +25,6 @@ export const PaymentType = {
   BANK_TRANSFER_REPROCESS: "BANK_TRANSFER_REPROCESS",
 };
 
-console.log(morning());
-
 async function reQueryPendingTransfer() {
   const pastThreeMinutes = pastMinutes(2);
   // fetch the first fifteen in ascending order
@@ -46,7 +44,7 @@ async function reQueryPendingTransfer() {
       billerPurchaseTransactionStatus,
       transferTransactionType,
       payoutTransactionType,
-      morning(),
+      previousDayInMorning(),
       pastThreeMinutes,
     ],
   };
