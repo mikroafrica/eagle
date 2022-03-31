@@ -88,7 +88,7 @@ async function reQueryPendingWithdrawal() {
 }
 
 export const RetryWithdrawalJob = (): CronJob => {
-  return new CronJob("0 */10 * * * *", function () {
+  return new CronJob("0 */8 * * * *", function () {
     const formattedDate = moment.tz("Africa/Lagos");
     logger.info(`::: reQuery for withdrawal started ${formattedDate} :::`);
 
