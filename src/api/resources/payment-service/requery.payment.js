@@ -43,7 +43,7 @@ async function reQueryPendingWalletTopAndUSSD() {
     values: [
       handShakeStatus,
       TransactionMessagingType.WALLET_TOP_UP,
-      TransactionMessagingType.USSD_WITHDRAWAL,
+      TransactionMessagingType.TERMINAL,
       previousDayInMorning(),
       night(),
     ],
@@ -120,7 +120,7 @@ async function reQueryPendingTerminal() {
       "tnx.customer_biller_id = terminalPro.terminal_id " +
       "WHERE handshake_status != $1 AND tnx.type = $2 " +
       "AND tnx.time_updated >= $3 AND tnx.time_updated <= $4 " +
-      "ORDER BY tnxDate DESC limit 70",
+      "ORDER BY tnxDate DESC limit 100",
 
     values: [
       completedhandShakeStatus,
@@ -148,7 +148,7 @@ async function reQueryPendingTerminal() {
 }
 
 export const RetryPaymentTerminalJob = (): CronJob => {
-  return new CronJob("0 */4 * * * *", function () {
+  return new CronJob("0 */5 * * * *", function () {
     const formattedDate = moment.tz("Africa/Lagos");
     logger.info(`::: re-processing for payment started ${formattedDate} :::`);
 
