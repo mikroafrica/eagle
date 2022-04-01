@@ -148,7 +148,7 @@ async function reQueryPendingTerminal() {
 }
 
 export const RetryPaymentTerminalJob = (): CronJob => {
-  return new CronJob("0 */5 * * * *", function () {
+  return new CronJob("0 */2 * * * *", function () {
     const formattedDate = moment.tz("Africa/Lagos");
     logger.info(`::: re-processing for payment started ${formattedDate} :::`);
 
