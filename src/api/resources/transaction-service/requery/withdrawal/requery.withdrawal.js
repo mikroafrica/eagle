@@ -26,7 +26,8 @@ import type { TransactionMessaging } from "../../../commons/model";
 async function reQueryPendingWithdrawal() {
   const query = {
     text:
-      "SELECT * FROM transactions tnx " +
+      "SELECT tnx.unique_identifier, tnx.amount, tnx.vendor, status.name, tnx.customer_biller_id, " +
+      "tnx.destination_wallet_id, tnx.time_created, tnx.user_id FROM transactions tnx " +
       "JOIN transaction_statuses status ON status.id = tnx.transaction_status " +
       "JOIN transaction_types type ON type.id = tnx.transaction_type " +
       "WHERE (status.name = $1 OR status.name = $2 OR status.name = $3 OR status.name = $4) " +
@@ -82,13 +83,14 @@ async function reQueryPendingWithdrawal() {
     pool.end();
     return Promise.resolve(transactionMessaging);
   } catch (e) {
+    console.error("Failed to with error " + e);
     pool.end();
     return Promise.reject(e);
   }
 }
 
 export const RetryWithdrawalJob = (): CronJob => {
-  return new CronJob("0 */8 * * * *", function () {
+  return new CronJob("0 */1 * * * *", function () {
     const formattedDate = moment.tz("Africa/Lagos");
     logger.info(`::: reQuery for withdrawal started ${formattedDate} :::`);
 
