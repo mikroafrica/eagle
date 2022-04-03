@@ -17,8 +17,8 @@ process.on("uncaughtException", function (err) {
 RetryTransferJob().start();
 RetryWalletTopUpJob().start();
 
-RetryPaymentWalletTopAndUSSDJob().start();
-RetryPaymentTerminalJob().start();
+// RetryPaymentWalletTopAndUSSDJob().start();
+// RetryPaymentTerminalJob().start();
 RetryBillsJob().start();
 RetryWithdrawalJob().start();
 
