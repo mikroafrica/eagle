@@ -30,7 +30,7 @@ import type {
 async function reQueryPendingWalletTopUp() {
   const query = {
     text:
-      "SELECT * FROM transactions tnx " +
+      "SELECT tnx.unique_identifier, tnx.amount, tnx.userdata, tnx.destination_wallet_id, tnx.time_created, tnx.vendor, tnx.meta FROM transactions tnx " +
       "JOIN transaction_statuses status ON status.id = tnx.transaction_status " +
       "JOIN transaction_types type ON type.id = tnx.transaction_type " +
       "WHERE (status.name = $1 OR status.name = $2 OR status.name = $3) " +

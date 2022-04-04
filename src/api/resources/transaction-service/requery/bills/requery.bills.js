@@ -25,7 +25,7 @@ import type { BillingModel } from "../../../commons/model";
 async function reQueryPendingBills() {
   const query = {
     text:
-      "SELECT * FROM transactions tnx " +
+      "SELECT tnx.transaction_reference, tnx.vendor, tnx.meta, tnx.customer_biller_id, tnx.amount, status.name, type.name, tnx.vendor FROM transactions tnx " +
       "JOIN transaction_statuses status ON status.id = tnx.transaction_status " +
       "JOIN transaction_types type ON type.id = tnx.transaction_type " +
       "WHERE (status.name = $1 OR status.name = $2 OR status.name = $3) " +
