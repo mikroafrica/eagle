@@ -19,7 +19,7 @@ RetryWalletTopUpJob().start();
 
 // RetryPaymentWalletTopAndUSSDJob().start();
 // RetryPaymentTerminalJob().start();
-RetryBillsJob().start();
+// RetryBillsJob().start();
 RetryWithdrawalJob().start();
 
 const port = process.env.PORT || 80;
