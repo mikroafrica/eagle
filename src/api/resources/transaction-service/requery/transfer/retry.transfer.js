@@ -91,7 +91,9 @@ export const RetryTransferJob = (): CronJob => {
         reQueryTransferEvent.emit(REQUERY_TRANSACTION_EMITTER, paymentDtoList);
       })
       .catch((err) => {
-        logger.error(`error occurred while publishing result: ${err} `);
+        logger.error(
+          `error occurred while publishing transfer result: ${err} `
+        );
       });
   });
 };

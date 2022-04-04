@@ -102,7 +102,9 @@ export const RetryWithdrawalJob = (): CronJob => {
         );
       })
       .catch((err) => {
-        logger.error(`error occurred while publishing result: ${err} `);
+        logger.error(
+          `error occurred while publishing withdrawal result: ${err} `
+        );
       });
   });
 };

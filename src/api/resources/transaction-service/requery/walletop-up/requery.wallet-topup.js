@@ -90,7 +90,7 @@ async function reQueryPendingWalletTopUp() {
 }
 
 export const RetryWalletTopUpJob = (): CronJob => {
-  return new CronJob("0 */4 * * * *", function () {
+  return new CronJob("0 */5 * * * *", function () {
     const formattedDate = moment.tz("Africa/Lagos");
     logger.info(`::: reQuery for wallet top-up started ${formattedDate} :::`);
 
@@ -102,7 +102,9 @@ export const RetryWalletTopUpJob = (): CronJob => {
         );
       })
       .catch((err) => {
-        logger.error(`error occurred while publishing result: ${err} `);
+        logger.error(
+          `error occurred while publishing wallet topup up  result: ${err} `
+        );
       });
   });
 };
