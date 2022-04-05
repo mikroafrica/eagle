@@ -72,7 +72,7 @@ async function reQueryPendingWalletTopAndUSSD() {
 }
 
 export const RetryPaymentWalletTopAndUSSDJob = (): CronJob => {
-  return new CronJob("0 */5 * * * *", function () {
+  return new CronJob("0 */3 * * * *", function () {
     const formattedDate = moment.tz("Africa/Lagos");
     logger.info(
       `::: Wallet top-up from payment db processing for payment started ${formattedDate} :::`
