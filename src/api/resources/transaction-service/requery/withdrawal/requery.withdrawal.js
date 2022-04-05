@@ -12,6 +12,7 @@ import reQueryWithdrawalEmitter, {
 
 import {
   billerPurchaseTransactionStatus,
+  morning,
   night,
   paymentSuccessfulTransactionStatus,
   pendingPaymentReversalStatus,
@@ -32,7 +33,7 @@ async function reQueryPendingWithdrawal() {
       "JOIN transaction_types type ON type.id = tnx.transaction_type " +
       "WHERE (status.name = $1 OR status.name = $2 OR status.name = $3 OR status.name = $4) " +
       "AND type.name = $5 AND tnx.time_updated >= $6 AND tnx.user_id != 'unAssigned' " +
-      "ORDER BY tnx.time_updated DESC limit 100 ",
+      "ORDER BY tnx.time_updated DESC limit 50 ",
 
     values: [
       pendingTransactionStatus,
@@ -40,7 +41,7 @@ async function reQueryPendingWithdrawal() {
       billerPurchaseTransactionStatus,
       pendingPaymentReversalStatus,
       withdrawalTransactionType,
-      previousDayInMorning(),
+      morning(),
     ],
   };
 
@@ -90,7 +91,7 @@ async function reQueryPendingWithdrawal() {
 }
 
 export const RetryWithdrawalJob = (): CronJob => {
-  return new CronJob("0 */4 * * * *", function () {
+  return new CronJob("0 */3 * * * *", function () {
     const formattedDate = moment.tz("Africa/Lagos");
     logger.info(`::: reQuery for withdrawal started ${formattedDate} :::`);
 

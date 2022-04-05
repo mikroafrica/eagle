@@ -20,7 +20,7 @@ RetryTransferJob().start();
 // RetryPaymentWalletTopAndUSSDJob().start();
 // RetryPaymentTerminalJob().start();
 RetryBillsJob().start();
-RetryWithdrawalJob().start();
+// RetryWithdrawalJob().start();
 
 const port = process.env.PORT || 80;
 server.listen(port, function () {
