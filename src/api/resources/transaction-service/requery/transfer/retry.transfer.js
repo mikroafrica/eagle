@@ -37,7 +37,7 @@ async function reQueryPendingTransfer() {
       "WHERE (status.name = $1 OR status.name = $2 OR status.name = $3) " +
       "AND (type.name = $4 OR type.name = $5) " +
       "AND tnx.time_created >= $6 AND tnx.time_created <= $7 " +
-      "ORDER BY tnx.time_created DESC limit 100",
+      "ORDER BY tnx.time_created DESC limit 200",
 
     values: [
       pendingTransactionStatus,
@@ -82,7 +82,7 @@ async function reQueryPendingTransfer() {
 
 // run job every one minutes
 export const RetryTransferJob = (): CronJob => {
-  return new CronJob("0 */3 * * * *", function () {
+  return new CronJob("0 */2 * * * *", function () {
     const formattedDate = moment.tz("Africa/Lagos");
     logger.info(`::: reQuery for transfer started ${formattedDate} :::`);
 
