@@ -82,7 +82,7 @@ async function reQueryPendingTransfer() {
 
 // run job every one minutes
 export const RetryTransferJob = (): CronJob => {
-  return new CronJob("0 */2 * * * *", function () {
+  return new CronJob("0 */4 * * * *", function () {
     const formattedDate = moment.tz("Africa/Lagos");
     logger.info(`::: reQuery for transfer started ${formattedDate} :::`);
 
