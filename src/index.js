@@ -8,19 +8,21 @@ import {
   RetryPaymentWalletTopAndUSSDJob,
 } from "./api/resources/payment-service/requery.payment";
 import { RetryBillsJob } from "./api/resources/transaction-service/requery/bills";
+import { RetryReportJob } from "./api/resources/transaction-service/requery/report/transaction.report";
 
 // handle all uncaught errors
 process.on("uncaughtException", function (err) {
   logger.error(`uncaught error has been fired with Error: ${err}`);
 });
 
-RetryTransferJob().start();
+// RetryTransferJob().start();
 // RetryWalletTopUpJob().start();
 
 // RetryPaymentWalletTopAndUSSDJob().start();
 // RetryPaymentTerminalJob().start();
-RetryBillsJob().start();
+// RetryBillsJob().start();
 // RetryWithdrawalJob().start();
+RetryReportJob().start();
 
 const port = process.env.PORT || 80;
 server.listen(port, function () {

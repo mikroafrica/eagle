@@ -27,13 +27,13 @@ import type { TransactionMessaging } from "../../../commons/model";
 async function reQueryPendingWithdrawal() {
   const query = {
     text:
-      "SELECT tnx.unique_identifier, tnx.amount, tnx.vendor, status.name, tnx.customer_biller_id, " +
+      "SELECT tnx.unique_identifier, tnx.amount, tnx.vendor, tnx.transaction_status, status.name, tnx.customer_biller_id, " +
       "tnx.destination_wallet_id, tnx.time_created, tnx.user_id FROM transactions tnx " +
       "JOIN transaction_statuses status ON status.id = tnx.transaction_status " +
       "JOIN transaction_types type ON type.id = tnx.transaction_type " +
       "WHERE (status.name = $1 OR status.name = $2 OR status.name = $3 OR status.name = $4) " +
-      "AND type.name = $5 AND tnx.time_updated >= $6 AND tnx.user_id != 'unAssigned' " +
-      "ORDER BY tnx.time_updated DESC limit 50 ",
+      "AND type.name = $5 AND tnx.time_created >= $6 AND tnx.user_id != 'unAssigned' " +
+      "ORDER BY tnx.time_created DESC limit 50 ",
 
     values: [
       pendingTransactionStatus,
@@ -41,7 +41,7 @@ async function reQueryPendingWithdrawal() {
       billerPurchaseTransactionStatus,
       pendingPaymentReversalStatus,
       withdrawalTransactionType,
-      morning(),
+      1648767600000,
     ],
   };
 
@@ -67,6 +67,20 @@ async function reQueryPendingWithdrawal() {
         status = TransactionStatus.REVERSAL;
       }
 
+      console.log({
+        paymentReference: data.unique_identifier,
+        amount: data.amount,
+        vendor: data.vendor,
+        paymentStatus: status,
+        type: TransactionMessagingType.TERMINAL,
+        terminalId: data.customer_biller_id,
+        // callbackResponse: data.gateway_response, this is not necessary to return
+        // back to the user
+        userId: data.user_id,
+        walletId: data.destination_wallet_id,
+        timeCreated: data.time_created,
+      });
+
       return {
         paymentReference: data.unique_identifier,
         amount: data.amount,
@@ -91,7 +105,7 @@ async function reQueryPendingWithdrawal() {
 }
 
 export const RetryWithdrawalJob = (): CronJob => {
-  return new CronJob("0 */3 * * * *", function () {
+  return new CronJob("0 */2 * * * *", function () {
     const formattedDate = moment.tz("Africa/Lagos");
     logger.info(`::: reQuery for withdrawal started ${formattedDate} :::`);
 

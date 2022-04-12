@@ -65,9 +65,9 @@ function publishReQuery(reQueryModel: ReQueryModel) {
       reQueryModel.transactionReference,
       function (response) {
         logger.info(
-          `pushed requery for ref [${reQueryModel}] with response [${JSON.stringify(
-            response
-          )}]`
+          `pushed requery for ref [${JSON.stringify(
+            reQueryModel
+          )}] with response [${JSON.stringify(response)}]`
         );
 
         resolve();
