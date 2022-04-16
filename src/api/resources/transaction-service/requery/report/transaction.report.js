@@ -108,7 +108,7 @@ const query = ({ startTime, endTime }) => {
   const query = {
     index: ReportIndex.TRANSACTION,
     from: 0,
-    size: 100,
+    size: 150,
     _source: [
       "meta",
       "reference",
@@ -130,7 +130,7 @@ const query = ({ startTime, endTime }) => {
         },
       },
       sort: {
-        timeCreated: { order: "asc" },
+        timeCreated: { order: "desc" },
       },
     },
   };
