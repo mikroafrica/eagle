@@ -162,6 +162,7 @@ const QueryPendingTransactions = async () => {
       const transaction = transactionList[i];
 
       const amount = parseFloat(transaction.amount);
+
       if (transaction.transactionType === TransactionType.Transfer) {
         const paymentDto = {
           userId: transaction.userId,
@@ -173,6 +174,9 @@ const QueryPendingTransactions = async () => {
           accountNumber: transaction.customerBillerId,
           type: PaymentType.BANK_TRANSFER_REQUERY,
           paymentDate: new Date(transaction.timeUpdated).getTime(),
+          terminalId: transaction.userdata?.meta?.terminalId,
+          serialNumber: transaction.userdata?.meta?.serialNumber,
+          vendor: transaction?.userdata?.meta?.dedicatedVendorName,
         };
         paymentDtoList.push(paymentDto);
       }
