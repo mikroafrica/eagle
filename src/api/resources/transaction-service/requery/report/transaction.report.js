@@ -8,7 +8,12 @@ import {
   ReportIndex,
   search,
 } from "../../../../modules/report-service";
-import { pastMinutes, previousDayInMorning } from "../../../commons/model";
+import {
+  pastMinutes,
+  previousDayInMorning,
+  TransactionMessagingType,
+  TransactionStatus,
+} from "../../../commons/model";
 import { PaymentType } from "../transfer/retry.transfer";
 import reQueryTransferEvent, {
   REQUERY_TRANSACTION_EMITTER,
@@ -16,19 +21,24 @@ import reQueryTransferEvent, {
 import reQueryBillEvent, {
   RE_QUERY_BILL_EMITTER,
 } from "../bills/requery.bills.event";
+import reQueryWithdrawalEmitter, {
+  REQUERY_WITHDRAWAL_EMITTER,
+} from "../withdrawal/requery.withdrawal-event";
 
-const TransactionType = {
+const ReportTransactionType = {
   Transfer: "TRANSFER",
   Data: "DATA",
   CableTv: "CABLE_TV",
   Phcn: "PHCN",
   Airtime: "AIRTIME",
+  Withdrawal: "WITHDRAWAL",
 };
 
-export const TransactionStatus = {
+export const ReportTransactionStatus = {
   Pending: "PENDING",
   PaymentSuccessful: "PAYMENT SUCCESSFUL",
   BillPurchasedFailed: "BILL PURCHASED FAILED",
+  PendingReversal: "PAYMENT REVERSED PEND",
 };
 
 const query = ({ startTime, endTime }) => {
@@ -55,27 +65,32 @@ const query = ({ startTime, endTime }) => {
       should: [
         {
           match: {
-            "transactionType.keyword": TransactionType.Phcn,
+            "transactionType.keyword": ReportTransactionType.Phcn,
           },
         },
         {
           match: {
-            "transactionType.keyword": TransactionType.Airtime,
+            "transactionType.keyword": ReportTransactionType.Airtime,
           },
         },
         {
           match: {
-            "transactionType.keyword": TransactionType.Data,
+            "transactionType.keyword": ReportTransactionType.Data,
           },
         },
         {
           match: {
-            "transactionType.keyword": TransactionType.CableTv,
+            "transactionType.keyword": ReportTransactionType.CableTv,
           },
         },
         {
           match: {
-            "transactionType.keyword": TransactionType.Transfer,
+            "transactionType.keyword": ReportTransactionType.Transfer,
+          },
+        },
+        {
+          match: {
+            "transactionType.keyword": ReportTransactionType.Withdrawal,
           },
         },
       ],
@@ -87,17 +102,19 @@ const query = ({ startTime, endTime }) => {
       should: [
         {
           match: {
-            "transactionStatus.keyword": TransactionStatus.BillPurchasedFailed,
+            "transactionStatus.keyword":
+              ReportTransactionStatus.BillPurchasedFailed,
           },
         },
         {
           match: {
-            "transactionStatus.keyword": TransactionStatus.Pending,
+            "transactionStatus.keyword": ReportTransactionStatus.Pending,
           },
         },
         {
           match: {
-            "transactionStatus.keyword": TransactionStatus.PaymentSuccessful,
+            "transactionStatus.keyword":
+              ReportTransactionStatus.PaymentSuccessful,
           },
         },
       ],
@@ -122,6 +139,8 @@ const query = ({ startTime, endTime }) => {
       "transactionType",
       "transactionStatus",
       "customerBillerId",
+      "destinationWalletId",
+      "uniqueIdentifier",
     ],
     body: {
       query: {
@@ -157,13 +176,14 @@ const QueryPendingTransactions = async () => {
 
     const paymentDtoList = [];
     const billingDtoList = [];
+    const withdrawalList = [];
 
     for (let i = 0; i < transactionList.length; i++) {
       const transaction = transactionList[i];
 
       const amount = parseFloat(transaction.amount);
 
-      if (transaction.transactionType === TransactionType.Transfer) {
+      if (transaction.transactionType === ReportTransactionType.Transfer) {
         const paymentDto = {
           userId: transaction.userId,
           amount: amount,
@@ -181,11 +201,43 @@ const QueryPendingTransactions = async () => {
         paymentDtoList.push(paymentDto);
       }
 
+      if (transaction.transactionType === ReportTransactionType.Withdrawal) {
+        let status = TransactionStatus.PENDING;
+        if (
+          transaction.transactionStatus ===
+            ReportTransactionStatus.PaymentSuccessful ||
+          transaction.transactionStatus ===
+            ReportTransactionStatus.BillPurchasedFailed
+        ) {
+          status = TransactionStatus.SUCCESS;
+        }
+
+        if (
+          transaction.transactionStatus ===
+          ReportTransactionStatus.PendingReversal
+        ) {
+          status = TransactionStatus.REVERSAL;
+        }
+
+        const withdrawalDto = {
+          paymentReference: transaction.uniqueIdentifier,
+          amount: amount,
+          vendor: transaction.vendor,
+          paymentStatus: status,
+          type: TransactionMessagingType.TERMINAL,
+          terminalId: transaction.customerBillerId,
+          userId: transaction.userId,
+          walletId: transaction.destinationWalletId,
+          timeCreated: new Date(transaction.timeUpdated).getTime(),
+        };
+        withdrawalList.push(withdrawalDto);
+      }
+
       if (
-        transaction.transactionType === TransactionType.Phcn ||
-        transaction.transactionType === TransactionType.Data ||
-        transaction.transactionType === TransactionType.CableTv ||
-        transaction.transactionType === TransactionType.Airtime
+        transaction.transactionType === ReportTransactionType.Phcn ||
+        transaction.transactionType === ReportTransactionType.Data ||
+        transaction.transactionType === ReportTransactionType.CableTv ||
+        transaction.transactionType === ReportTransactionType.Airtime
       ) {
         const billingDto = {
           transactionReference: transaction.reference,
@@ -213,8 +265,11 @@ const QueryPendingTransactions = async () => {
     if (billingDtoList.length > 0) {
       reQueryBillEvent.emit(RE_QUERY_BILL_EMITTER, billingDtoList);
     }
+
+    if (withdrawalList.length > 0) {
+      reQueryWithdrawalEmitter.emit(REQUERY_WITHDRAWAL_EMITTER, withdrawalList);
+    }
   } catch (err) {
-    console.error(err);
     logger.error(
       `::: failed to fetch report transactions with error [${JSON.stringify(
         err
