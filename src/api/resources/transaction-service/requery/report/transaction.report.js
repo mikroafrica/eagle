@@ -270,7 +270,6 @@ const QueryPendingTransactions = async () => {
       reQueryWithdrawalEmitter.emit(REQUERY_WITHDRAWAL_EMITTER, withdrawalList);
     }
   } catch (err) {
-    console.error(err);
     logger.error(
       `::: failed to fetch report transactions with error [${JSON.stringify(
         err
