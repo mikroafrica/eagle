@@ -168,9 +168,8 @@ const QueryPendingTransactions = async () => {
     const endTime = new Date(pastThreeMinutes);
     const queryResponse = await search(query({ startTime, endTime }));
     const { data: queryResponseData } = queryResponse.data;
-    const { list: transactionList, total } = handleListOfHits(
-      queryResponseData
-    );
+    const { list: transactionList, total } =
+      handleListOfHits(queryResponseData);
 
     logger.info(`::: Total transaction report list is [${total}] :::`);
 
@@ -197,6 +196,8 @@ const QueryPendingTransactions = async () => {
           terminalId: transaction.userdata?.meta?.terminalId,
           serialNumber: transaction.userdata?.meta?.serialNumber,
           vendor: transaction?.userdata?.meta?.dedicatedVendorName,
+          isVendorProcessInstant:
+            transaction?.userdata?.meta?.isVendorProcessInstant,
         };
         paymentDtoList.push(paymentDto);
       }
