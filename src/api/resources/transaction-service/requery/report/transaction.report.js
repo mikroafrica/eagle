@@ -196,8 +196,11 @@ const QueryPendingTransactions = async () => {
           terminalId: transaction.userdata?.meta?.terminalId,
           serialNumber: transaction.userdata?.meta?.serialNumber,
           vendor: transaction?.userdata?.meta?.dedicatedVendorName,
-          isVendorProcessInstant:
-            transaction?.userdata?.meta?.isVendorProcessInstant,
+          isDirectPayment: transaction?.userdata?.meta?.isVendorProcessInstant,
+          cashInUrl: transaction?.userdata?.meta?.cashInUrl,
+          cashInSecretKey: transaction?.userdata?.meta?.cashInSecretKey,
+          shouldTransferUseNibssCode:
+            transaction?.userdata?.meta?.shouldTransferUseNibssCode,
         };
         paymentDtoList.push(paymentDto);
       }
@@ -244,7 +247,7 @@ const QueryPendingTransactions = async () => {
           transactionReference: transaction.reference,
           vendor: transaction.vendor
             ? transaction.vendor.toLocaleLowerCase()
-            : "",
+            : transaction?.userdata?.meta?.dedicatedVendorName || "",
           phoneNumber:
             transaction.meta.data.customerPhoneNumber ||
             transaction.customerBillerId,
@@ -254,6 +257,11 @@ const QueryPendingTransactions = async () => {
           type: transaction.transactionType.toLocaleLowerCase(),
           smartCardNumber: transaction.customerBillerId,
           category: transaction.transactionType.toLocaleLowerCase(),
+          terminalId: transaction.userdata?.meta?.terminalId,
+          serialNumber: transaction.userdata?.meta?.serialNumber,
+          isDirectPayment: transaction?.userdata?.meta?.isVendorProcessInstant,
+          cashInUrl: transaction?.userdata?.meta?.cashInUrl,
+          cashInSecretKey: transaction?.userdata?.meta?.cashInSecretKey,
         };
         billingDtoList.push(billingDto);
       }
