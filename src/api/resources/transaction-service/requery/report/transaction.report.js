@@ -188,7 +188,10 @@ const QueryPendingTransactions = async () => {
 
       const amount = parseFloat(transaction.amount);
 
-      if (transaction.transactionType === ReportTransactionType.Transfer) {
+      if (
+        transaction.transactionType === ReportTransactionType.Transfer ||
+        transaction.transactionType === ReportTransactionType.Payout
+      ) {
         const paymentDto = {
           userId: transaction.userId,
           amount: amount,
