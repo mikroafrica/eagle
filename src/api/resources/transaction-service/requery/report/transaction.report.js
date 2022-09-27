@@ -32,6 +32,7 @@ const ReportTransactionType = {
   Phcn: "PHCN",
   Airtime: "AIRTIME",
   Withdrawal: "WITHDRAWAL",
+  Payout: "PAYOUT",
 };
 
 export const ReportTransactionStatus = {
@@ -91,6 +92,11 @@ const query = ({ startTime, endTime }) => {
         {
           match: {
             "transactionType.keyword": ReportTransactionType.Withdrawal,
+          },
+        },
+        {
+          match: {
+            "transactionType.keyword": ReportTransactionType.Payout,
           },
         },
       ],
