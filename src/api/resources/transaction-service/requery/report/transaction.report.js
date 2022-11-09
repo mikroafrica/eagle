@@ -131,7 +131,7 @@ const query = ({ startTime, endTime }) => {
   const query = {
     index: ReportIndex.TRANSACTION,
     from: 0,
-    size: 150,
+    size: 250,
     _source: [
       "meta",
       "reference",
@@ -147,6 +147,8 @@ const query = ({ startTime, endTime }) => {
       "customerBillerId",
       "destinationWalletId",
       "uniqueIdentifier",
+      "retryCount",
+      "",
     ],
     body: {
       query: {
@@ -211,6 +213,7 @@ const QueryPendingTransactions = async () => {
           shouldTransferUseNibssCode:
             transaction?.userdata?.meta?.shouldTransferUseNibssCode,
         };
+
         paymentDtoList.push(paymentDto);
       }
 
