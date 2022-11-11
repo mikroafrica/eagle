@@ -1,9 +1,4 @@
 import type { TransactionMessagingContainer } from "../../../commons/model";
-import {
-  findByTransactionReference,
-  saveTransaction,
-  updateByTransactionReference,
-} from "../../model/transaction.service";
 import logger from "../../../../../logger";
 import Events from "events";
 import async from "async";
@@ -17,46 +12,28 @@ const ReQueryWalletTopUpEmitter = new Emitter();
 
 export const REQUERY_WALLET_TOP_UP_EMITTER = "REQUERY_WALLET_TOP_UP";
 
-ReQueryWalletTopUpEmitter.on(REQUERY_WALLET_TOP_UP_EMITTER, function (
-  transactionContainerList: TransactionMessagingContainer[]
-) {
-  async.forEachOf(
-    transactionContainerList,
-    async (transactionContainer, key, callback) => {
-      const transactionReference = transactionContainer.paymentReference;
-
-      // check if transaction reference exist in this
-      let transactionObject = await findByTransactionReference(
-        transactionReference
-      );
-
-      if (transactionObject) {
-        const updatedRetryCount = transactionObject.retryCount + 1;
-
-        // update the transaction with its number of retry count
-        await updateByTransactionReference(
-          transactionReference,
-          updatedRetryCount
-        );
-      } else {
-        await saveTransaction(transactionReference);
+ReQueryWalletTopUpEmitter.on(
+  REQUERY_WALLET_TOP_UP_EMITTER,
+  function (transactionContainerList: TransactionMessagingContainer[]) {
+    async.forEachOf(
+      transactionContainerList,
+      async (transactionContainer, key, callback) => {
+        // push payment dto to kafka for further processing
+        try {
+          await publishWalletTopUpDto(transactionContainer);
+        } catch (e) {
+        } finally {
+          callback();
+        }
+      },
+      () => {
+        if (transactionContainerList.length > 0) {
+          logger.info(`published all pending wallet top-up for reQuery`);
+        }
       }
-
-      // push payment dto to kafka for further processing
-      try {
-        await publishWalletTopUpDto(transactionContainer);
-      } catch (e) {
-      } finally {
-        callback();
-      }
-    },
-    () => {
-      if (transactionContainerList.length > 0) {
-        logger.info(`published all pending wallet top-up for reQuery`);
-      }
-    }
-  );
-});
+    );
+  }
+);
 
 function publishWalletTopUpDto(
   transactionContainer: TransactionMessagingContainer
