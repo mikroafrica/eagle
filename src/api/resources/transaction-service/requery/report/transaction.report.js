@@ -24,6 +24,9 @@ import reQueryBillEvent, {
 import reQueryWithdrawalEmitter, {
   REQUERY_WITHDRAWAL_EMITTER,
 } from "../withdrawal/requery.withdrawal-event";
+import reQueryWalletTopUpEmitter, {
+  REQUERY_WALLET_TOP_UP_EMITTER,
+} from "../walletop-up/requery.wallet-top-up.event";
 
 const ReportTransactionType = {
   Transfer: "TRANSFER",
@@ -33,6 +36,7 @@ const ReportTransactionType = {
   Airtime: "AIRTIME",
   Withdrawal: "WITHDRAWAL",
   Payout: "PAYOUT",
+  WalletTopUp: "WALLET_TOP_UP",
 };
 
 export const ReportTransactionStatus = {
@@ -97,6 +101,11 @@ const query = ({ startTime, endTime }) => {
         {
           match: {
             "transactionType.keyword": ReportTransactionType.Payout,
+          },
+        },
+        {
+          match: {
+            "transactionType.keyword": ReportTransactionType.WalletTopUp,
           },
         },
       ],
@@ -184,6 +193,7 @@ const QueryPendingTransactions = async () => {
     const paymentDtoList = [];
     const billingDtoList = [];
     const withdrawalList = [];
+    const walletTopUpList = [];
 
     for (let i = 0; i < transactionList.length; i++) {
       const transaction = transactionList[i];
@@ -249,6 +259,24 @@ const QueryPendingTransactions = async () => {
         withdrawalList.push(withdrawalDto);
       }
 
+      if (transaction.transactionType === ReportTransactionType.WalletTopUp) {
+        const walletTopUpDto = {
+          amount: amount,
+          email: transaction?.userdata?.meta?.accountEmail,
+          paymentReference: transaction.uniqueIdentifier,
+          accountNumber: transaction.userdata.meta
+            ? transaction.userdata.meta.accountNumber
+            : "",
+          vendor: transaction?.vendor || transaction?.meta?.data?.vendor,
+          paymentStatus: TransactionStatus.SUCCESS,
+          type: TransactionMessagingType.WALLET_TOP_UP,
+          userId: transaction.userId,
+          walletId: transaction.destinationWalletId,
+          timeCreated: new Date(transaction.timeUpdated).getTime(),
+        };
+        walletTopUpList.push(walletTopUpDto);
+      }
+
       if (
         transaction.transactionType === ReportTransactionType.Phcn ||
         transaction.transactionType === ReportTransactionType.Data ||
@@ -290,7 +318,15 @@ const QueryPendingTransactions = async () => {
     if (withdrawalList.length > 0) {
       reQueryWithdrawalEmitter.emit(REQUERY_WITHDRAWAL_EMITTER, withdrawalList);
     }
+
+    if (walletTopUpList.length > 0) {
+      reQueryWalletTopUpEmitter.emit(
+        REQUERY_WALLET_TOP_UP_EMITTER,
+        walletTopUpList
+      );
+    }
   } catch (err) {
+    console.error(err);
     logger.error(
       `::: failed to fetch report transactions with error [${JSON.stringify(
         err
