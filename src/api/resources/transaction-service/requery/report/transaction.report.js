@@ -274,7 +274,7 @@ const QueryPendingTransactions = async () => {
           walletId: transaction.destinationWalletId,
           timeCreated: new Date(transaction.timeUpdated).getTime(),
         };
-        walletTopUpDto.push(walletTopUpDto);
+        walletTopUpList.push(walletTopUpDto);
       }
 
       if (
@@ -326,6 +326,7 @@ const QueryPendingTransactions = async () => {
       );
     }
   } catch (err) {
+    console.error(err);
     logger.error(
       `::: failed to fetch report transactions with error [${JSON.stringify(
         err
