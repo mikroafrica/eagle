@@ -140,7 +140,7 @@ const query = ({ startTime, endTime }) => {
   const query = {
     index: ReportIndex.TRANSACTION,
     from: 0,
-    size: 250,
+    size: 450,
     _source: [
       "meta",
       "reference",
