@@ -16,7 +16,7 @@ const request = () => {
 
 export const ReportIndex = {
   WALLET_TRANSACTION: "mikro-wallet-transaction",
-  TRANSACTION: "mikro-transaction",
+  TRANSACTION: "mikro-transaction-report",
   User: "mikro-user",
   TICKET: "mikro-user-ticket",
   NUBAN_TRANSACTION: "mikro-nuban-transactions",
