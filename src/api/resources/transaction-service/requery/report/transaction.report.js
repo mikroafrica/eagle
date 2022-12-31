@@ -70,26 +70,6 @@ const query = ({ startTime, endTime }) => {
       should: [
         {
           match: {
-            "transactionType.keyword": ReportTransactionType.Phcn,
-          },
-        },
-        {
-          match: {
-            "transactionType.keyword": ReportTransactionType.Airtime,
-          },
-        },
-        {
-          match: {
-            "transactionType.keyword": ReportTransactionType.Data,
-          },
-        },
-        {
-          match: {
-            "transactionType.keyword": ReportTransactionType.CableTv,
-          },
-        },
-        {
-          match: {
             "transactionType.keyword": ReportTransactionType.Transfer,
           },
         },
@@ -106,6 +86,26 @@ const query = ({ startTime, endTime }) => {
         {
           match: {
             "transactionType.keyword": ReportTransactionType.WalletTopUp,
+          },
+        },
+        {
+          match: {
+            "transactionType.keyword": ReportTransactionType.Phcn,
+          },
+        },
+        {
+          match: {
+            "transactionType.keyword": ReportTransactionType.Airtime,
+          },
+        },
+        {
+          match: {
+            "transactionType.keyword": ReportTransactionType.Data,
+          },
+        },
+        {
+          match: {
+            "transactionType.keyword": ReportTransactionType.CableTv,
           },
         },
       ],
@@ -179,8 +179,7 @@ const query = ({ startTime, endTime }) => {
 
 const QueryPendingTransactions = async () => {
   try {
-    // const previousDay = previousDayInMorning();
-    const previousDay = 1672484400000;
+    const previousDay = previousDayInMorning();
     const pastThreeMinutes = pastMinutes(2);
     const startTime = new Date(previousDay);
     const endTime = new Date(pastThreeMinutes);

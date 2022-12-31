@@ -1,4 +1,4 @@
-import type { TransactionMessagingContainer } from "../../../commons/model";
+import type { TransactionMessaging } from "../../../commons/model";
 import logger from "../../../../../logger";
 import Events from "events";
 import async from "async";
@@ -14,20 +14,20 @@ export const REQUERY_WALLET_TOP_UP_EMITTER = "REQUERY_WALLET_TOP_UP";
 
 ReQueryWalletTopUpEmitter.on(
   REQUERY_WALLET_TOP_UP_EMITTER,
-  function (transactionContainerList: TransactionMessagingContainer[]) {
+  function (transactionMessagingList: TransactionMessaging[]) {
     async.forEachOf(
-      transactionContainerList,
-      async (transactionContainer, key, callback) => {
+      transactionMessagingList,
+      async (transactionMessaging, key, callback) => {
         // push payment dto to kafka for further processing
         try {
-          await publishWalletTopUpDto(transactionContainer);
+          await publishWalletTopUpDto(transactionMessaging);
         } catch (e) {
         } finally {
           callback();
         }
       },
       () => {
-        if (transactionContainerList.length > 0) {
+        if (transactionMessagingList.length > 0) {
           logger.info(`published all pending wallet top-up for reQuery`);
         }
       }
@@ -35,9 +35,7 @@ ReQueryWalletTopUpEmitter.on(
   }
 );
 
-function publishWalletTopUpDto(
-  transactionContainer: TransactionMessagingContainer
-) {
+function publishWalletTopUpDto(transactionMessaging: TransactionMessaging) {
   return new Promise((resolve, reject) => {
     const config: KafkaConfig = {
       hostname: process.env.KAFKA_HOST,
@@ -49,12 +47,12 @@ function publishWalletTopUpDto(
 
     mikroProducer(
       config,
-      transactionContainer.messaging,
-      transactionContainer.transactionReference,
+      transactionMessaging,
+      transactionMessaging.transactionRef + `${new Date().getTime()}`,
       function (response) {
         logger.info(
           `published reQuery wallet top-up for reference [${
-            transactionContainer.transactionReference
+            transactionMessaging.paymentReference
           }] with response [${JSON.stringify(response)}]`
         );
         resolve();
