@@ -179,7 +179,8 @@ const query = ({ startTime, endTime }) => {
 
 const QueryPendingTransactions = async () => {
   try {
-    const previousDay = previousDayInMorning();
+    // const previousDay = previousDayInMorning();
+    const previousDay = 1672484400000;
     const pastThreeMinutes = pastMinutes(2);
     const startTime = new Date(previousDay);
     const endTime = new Date(pastThreeMinutes);
