@@ -88,26 +88,26 @@ const query = ({ startTime, endTime }) => {
             "transactionType.keyword": ReportTransactionType.WalletTopUp,
           },
         },
-        // {
-        //   match: {
-        //     "transactionType.keyword": ReportTransactionType.Phcn,
-        //   },
-        // },
-        // {
-        //   match: {
-        //     "transactionType.keyword": ReportTransactionType.Airtime,
-        //   },
-        // },
-        // {
-        //   match: {
-        //     "transactionType.keyword": ReportTransactionType.Data,
-        //   },
-        // },
-        // {
-        //   match: {
-        //     "transactionType.keyword": ReportTransactionType.CableTv,
-        //   },
-        // },
+        {
+          match: {
+            "transactionType.keyword": ReportTransactionType.Phcn,
+          },
+        },
+        {
+          match: {
+            "transactionType.keyword": ReportTransactionType.Airtime,
+          },
+        },
+        {
+          match: {
+            "transactionType.keyword": ReportTransactionType.Data,
+          },
+        },
+        {
+          match: {
+            "transactionType.keyword": ReportTransactionType.CableTv,
+          },
+        },
       ],
       minimum_should_match: 1,
     },
@@ -140,7 +140,7 @@ const query = ({ startTime, endTime }) => {
   const query = {
     index: ReportIndex.TRANSACTION,
     from: 0,
-    size: 250,
+    size: 450,
     _source: [
       "meta",
       "reference",
@@ -157,7 +157,6 @@ const query = ({ startTime, endTime }) => {
       "destinationWalletId",
       "uniqueIdentifier",
       "retryCount",
-      "",
     ],
     body: {
       query: {
